@@ -1,0 +1,148 @@
+---
+import Base from '../layouts/Base.astro';
+import PromptBlock from '../components/PromptBlock.astro';
+import StyleMap from '../components/StyleMap.astro';
+import { editUrl } from '../lib/config';
+import { styleById, styles, type Style } from '../lib/data';
+import { formatDate, pad } from '../lib/format';
+import { l, ui, type Lang } from '../lib/i18n';
+import { href } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+  style: Style;
+}
+
+const { lang, style: s } = Astro.props;
+const t = ui[lang];
+const index = styles.findIndex((x) => x.id === s.id);
+const prev = styles[index - 1];
+const next = styles[index + 1];
+const related = s.related.map(styleById);
+---
+
+<Base lang={lang} path={`/styles/${s.id}/`} nav="styles" title={l(s.name, lang)} description={l(s.summary, lang)}>
+  <div class="container">
+    <header class="page-head">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={href(lang, '/styles/')}>{t.styles.all}</a> / {pad(s.order)}
+      </nav>
+      <h1>{l(s.name, lang)}</h1>
+      <p class="lead">{l(s.summary, lang)}</p>
+      <div class="origin-meta">
+        {s.status === 'draft' && <span class="badge">{t.styles.draftNote}</span>}
+        {s.aka && s.aka.length > 0 && <span class="badge">{t.styles.aka}: {s.aka.join(', ')}</span>}
+      </div>
+    </header>
+
+    <div class="detail">
+      <article class="detail-main">
+        <section>
+          <h2 class="visually-hidden">{t.styles.definition}</h2>
+          <p class="definition">{l(s.definition, lang)}</p>
+        </section>
+
+        <section>
+          <h2>{t.styles.example}</h2>
+          {s.example.note && <p class="prompt-note">{l(s.example.note, lang)}</p>}
+          <PromptBlock text={l(s.example.prompt, lang)} label={l(s.name, lang)} />
+        </section>
+
+        <div class="trio">
+          <div>
+            <h3>{t.styles.reveals}</h3>
+            <ul class="bullets">{l(s.reveals, lang).map((x) => <li>{x}</li>)}</ul>
+          </div>
+          <div>
+            <h3>{t.styles.useWhen}</h3>
+            <ul class="bullets">{l(s.use_when, lang).map((x) => <li>{x}</li>)}</ul>
+          </div>
+          <div class="watch">
+            <h3>{t.styles.watchOut}</h3>
+            <ul class="bullets">{l(s.watch_out, lang).map((x) => <li>{x}</li>)}</ul>
+          </div>
+        </div>
+
+        <section>
+          <h2>{t.styles.interview}</h2>
+          <div class="interview">
+            <div>
+              <h3>{t.styles.lookFor}</h3>
+              <ul class="bullets">{l(s.interview.look_for, lang).map((x) => <li>{x}</li>)}</ul>
+            </div>
+            <div class="ask">
+              <h3>{t.styles.ask}</h3>
+              <ul class="bullets">{l(s.interview.ask, lang).map((x) => <li>{x}</li>)}</ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>{t.styles.origin}</h2>
+          <p style="color: var(--ink-2); max-width: 66ch">{l(s.origin.summary, lang)}</p>
+          {
+            (s.origin.people?.length || s.origin.date) && (
+              <div class="origin-meta">
+                {s.origin.people?.map((p) => <span class="badge badge-accent">{p}</span>)}
+                {s.origin.date && <span class="badge">{formatDate(s.origin.date, lang)}</span>}
+              </div>
+            )
+          }
+          <h3 class="visually-hidden">{t.styles.sources}</h3>
+          <ul class="sources bullets">
+            {
+              s.origin.sources.map((src) => (
+                <li>
+                  <a href={src.url} rel="noopener">
+                    {src.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <nav class="pager" aria-label={t.styles.all}>
+          {
+            prev && (
+              <a href={href(lang, `/styles/${prev.id}/`)}>
+                <span>← {t.styles.prev}</span>
+                {l(prev.name, lang)}
+              </a>
+            )
+          }
+          {
+            next && (
+              <a class="next" href={href(lang, `/styles/${next.id}/`)}>
+                <span>{t.styles.next} →</span>
+                {l(next.name, lang)}
+              </a>
+            )
+          }
+        </nav>
+      </article>
+
+      <aside class="aside">
+        <div>
+          <h2>{t.styles.mapTitle}</h2>
+          <StyleMap lang={lang} current={s.id} compact />
+        </div>
+        <div>
+          <h2>{t.styles.related}</h2>
+          <ul>
+            {
+              related.map((r) => (
+                <li>
+                  <a href={href(lang, `/styles/${r.id}/`)}>{l(r.name, lang)}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <a class="link-arrow" href={editUrl(`taxonomy/styles/${s.id}.yaml`)}>{t.styles.edit}</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>

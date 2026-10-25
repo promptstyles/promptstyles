@@ -1,0 +1,28 @@
+---
+import { REPO_URL, blobUrl } from '../lib/config';
+import { taxonomy } from '../lib/data';
+import { ui, type Lang } from '../lib/i18n';
+import { asset } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="stack" style="gap: 4px">
+      <span>Prompt Styles · {t.footer.license}</span>
+      <span>{t.footer.version(taxonomy.version)} · {taxonomy.updated}</span>
+    </div>
+    <nav aria-label="Footer">
+      <a href={REPO_URL}>{t.footer.source}</a>
+      <a href={blobUrl('CONTRIBUTING.md')}>{t.footer.propose}</a>
+      <a href={asset('/taxonomy.json')}>taxonomy.json</a>
+      <a href={asset('/signatories.json')}>signatories.json</a>
+    </nav>
+  </div>
+</footer>

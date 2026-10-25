@@ -1,0 +1,135 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: context-engineering
+order: 8
+status: draft
+name:
+  en: Context engineering
+  pt: Context engineering
+map:
+  how: 44
+  verification: 68
+
+summary:
+  en: Engineer what the model sees (files, docs, rules, tools) more than the wording.
+  pt: Trabalha o que o modelo enxerga (arquivos, docs, regras, ferramentas) mais que o texto.
+
+definition:
+  en: >-
+    The prompt is only the last line of what the model sees. Context engineering is the work
+    of assembling everything else: the right files, docs, schemas, conventions, examples,
+    tools and constraints, and keeping out what does not help. With good context, short
+    prompts work. With bad context, no wording will save you. It is central to working with
+    coding agents.
+  pt: >-
+    O prompt é só a última linha do que o modelo enxerga. Context engineering é o trabalho de
+    montar todo o resto: os arquivos certos, docs, schemas, convenções, exemplos, ferramentas
+    e restrições, e deixar de fora o que não ajuda. Com um bom contexto, prompts curtos
+    funcionam. Com um contexto ruim, nenhum texto salva. É central para trabalhar com agentes
+    de código.
+
+example:
+  note:
+    en: Most of the work happens before the prompt, which is a single line.
+    pt: Quase todo o trabalho acontece antes do prompt, que tem uma linha só.
+  prompt:
+    en: |-
+      # AGENTS.md (project rules, always loaded)
+      - Stack: React + Vite, tests with Vitest.
+      - Images come from GET /api/images?limit=N.
+      - Components live in src/components, one test file each.
+      - Never fetch inside components. Use hooks in src/hooks.
+
+      # Attached
+      src/hooks/useImages.ts
+      src/components/LazyImage.tsx
+      docs/design-tokens.md (transition timings)
+
+      > Build the home carousel described in issue #142.
+    pt: |-
+      # AGENTS.md (regras do projeto, sempre carregadas)
+      - Stack: React + Vite, testes com Vitest.
+      - As imagens vêm de GET /api/images?limit=N.
+      - Componentes ficam em src/components, um arquivo de teste cada.
+      - Nunca faça fetch dentro de componente. Use hooks em src/hooks.
+
+      # Anexados
+      src/hooks/useImages.ts
+      src/components/LazyImage.tsx
+      docs/design-tokens.md (tempos de transição)
+
+      > Construa o carrossel da home descrito na issue #142.
+
+reveals:
+  en:
+    - Maturity with agents and larger systems
+    - Understanding of what the model needs to know, and what it does not
+    - Ability to make a team's conventions readable by machines
+  pt:
+    - Maturidade com agentes e sistemas maiores
+    - Entendimento do que o modelo precisa saber, e do que não precisa
+    - Capacidade de tornar as convenções do time legíveis para máquinas
+
+use_when:
+  en:
+    - Working with coding agents on a real codebase
+    - Recurring tasks where rules should be written once
+    - Large codebases where the model cannot see everything
+  pt:
+    - Trabalho com agentes de código num codebase real
+    - Tarefas recorrentes em que as regras devem ser escritas uma vez só
+    - Codebases grandes em que o modelo não consegue ver tudo
+
+watch_out:
+  en:
+    - "Context stuffing: irrelevant material dilutes the model's attention"
+    - Stale rules files that contradict the code
+    - Leaking secrets or private data into the context
+  pt:
+    - "Excesso de contexto: material irrelevante dilui a atenção do modelo"
+    - Arquivos de regras desatualizados que contradizem o código
+    - Vazar segredos ou dados privados no contexto
+
+interview:
+  look_for:
+    en:
+      - What did the candidate give the model, and what did they leave out on purpose?
+      - Do they keep rules and docs up to date as the project changes?
+    pt:
+      - O que a pessoa deu ao modelo, e o que deixou de fora de propósito?
+      - Ela mantém regras e docs atualizadas conforme o projeto muda?
+  ask:
+    en:
+      - Why these three files and not the whole folder?
+      - What would you add to AGENTS.md after this task?
+    pt:
+      - Por que esses três arquivos e não a pasta inteira?
+      - O que você adicionaria ao AGENTS.md depois dessa tarefa?
+
+origin:
+  summary:
+    en: >-
+      Popularized in June 2025 by Shopify CEO Tobi Lütke, who said he preferred the term to
+      "prompt engineering", and amplified a week later by Andrej Karpathy, who described it as
+      the art of filling the context window with just the right information for the next step.
+      The term was already in use earlier that year, for example in Dex Horthy's
+      12-Factor Agents and in Cognition's "Don't Build Multi-Agents". Nobody is credited
+      with coining it.
+    pt: >-
+      Popularizado em junho de 2025 por Tobi Lütke, CEO da Shopify, que disse preferir o termo
+      a "prompt engineering", e amplificado uma semana depois por Andrej Karpathy, que o descreveu
+      como a arte de preencher a janela de contexto com só a informação certa para o próximo passo.
+      O termo já aparecia antes naquele ano, por exemplo no 12-Factor Agents de Dex Horthy e no
+      "Don't Build Multi-Agents" da Cognition. Ninguém leva o crédito por ter cunhado o termo.
+  people: [Tobi Lütke, Andrej Karpathy]
+  date: "2025-06-19"
+  sources:
+    - title: "Tobi Lütke: “I really like the term context engineering over prompt engineering” (X, 2025-06-19)"
+      url: https://x.com/tobi/status/1935533422589399127
+    - title: "Andrej Karpathy: “+1 for context engineering over prompt engineering” (X, 2025-06-25)"
+      url: https://x.com/karpathy/status/1937902205765607626
+    - title: "Dex Horthy (HumanLayer): 12-Factor Agents (2025)"
+      url: https://github.com/humanlayer/12-factor-agents
+    - title: "Walden Yan (Cognition): Don't Build Multi-Agents (2025-06-12)"
+      url: https://cognition.com/blog/dont-build-multi-agents
+
+related: [example-based, spec-driven]

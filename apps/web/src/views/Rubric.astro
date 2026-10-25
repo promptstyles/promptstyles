@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import { editUrl } from '../lib/config';
+import { interviewMinutes, rubric } from '../lib/data';
+import { l, ui, type Lang } from '../lib/i18n';
+import { asset } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const { interview, prepare } = rubric;
+const longest = Math.max(...interview.steps.map((s) => s.minutes));
+---
+
+<Base lang={lang} path="/rubric/" nav="rubric" title={t.rubric.title} description={l(rubric.intro, lang)}>
+  <div class="container">
+    <header class="page-head">
+      <span class="eyebrow">{t.nav.rubric}</span>
+      <h1>{t.rubric.title}</h1>
+      <p class="lead">{l(rubric.intro, lang)}</p>
+    </header>
+
+    <div class="stack-lg" style="padding-bottom: clamp(64px, 9vw, 112px)">
+      <section class="stack" aria-labelledby="levels-title">
+        <h2 id="levels-title" class="eyebrow">{t.rubric.levels}</h2>
+        <ol class="levels">
+          {
+            rubric.levels.map((lv) => (
+              <li>
+                <span class="lvl">{lv.level}</span>
+                <h3>{l(lv.name, lang)}</h3>
+                <p>{l(lv.summary, lang)}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="stack" aria-labelledby="matrix-title">
+        <h2 id="matrix-title" class="eyebrow">{t.rubric.matrix}</h2>
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th scope="col">{t.rubric.dimension}</th>
+              {rubric.levels.map((lv) => <th scope="col">{lv.level} · {l(lv.name, lang)}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {
+              rubric.dimensions.map((d) => (
+                <tr>
+                  <th scope="row">
+                    <strong>{l(d.name, lang)}</strong>
+                    <span>{l(d.question, lang)}</span>
+                  </th>
+                  {d.descriptors.map((desc, i) => (
+                    <td data-label={`${rubric.levels[i].level} · ${l(rubric.levels[i].name, lang)}`}>{l(desc, lang)}</td>
+                  ))}
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <section class="stack" aria-labelledby="interview-title">
+        <div class="row-between">
+          <h2 id="interview-title" style="font-size: clamp(1.8rem, 3.6vw, 2.6rem)">{l(interview.title, lang)}</h2>
+          <span class="badge">{t.rubric.total(interviewMinutes)}</span>
+        </div>
+        <div class="timeline" aria-hidden="true">
+          {
+            interview.steps.map((s) => (
+              <span class:list={{ long: s.minutes === longest }} style={`flex: ${s.minutes} 1 0`} title={l(s.name, lang)}>
+                {s.minutes}′
+              </span>
+            ))
+          }
+        </div>
+        <ol class="steps">
+          {
+            interview.steps.map((s) => (
+              <li>
+                <h3>
+                  {l(s.name, lang)} <small>{s.minutes} {t.rubric.minutes}</small>
+                </h3>
+                <p>{l(s.description, lang)}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="flags" aria-label={t.rubric.scoring}>
+        <div>
+          <h3>{t.rubric.scoring}</h3>
+          <ul class="bullets">{l(interview.scoring, lang).map((x) => <li>{x}</li>)}</ul>
+        </div>
+        <div>
+          <h3>{t.rubric.green}</h3>
+          <ul class="bullets">{l(interview.green_flags, lang).map((x) => <li>{x}</li>)}</ul>
+        </div>
+        <div class="red">
+          <h3>{t.rubric.red}</h3>
+          <ul class="bullets">{l(interview.red_flags, lang).map((x) => <li>{x}</li>)}</ul>
+        </div>
+      </section>
+
+      <section class="stack" aria-labelledby="prepare-title">
+        <h2 id="prepare-title" style="font-size: clamp(1.8rem, 3.6vw, 2.6rem)">{l(prepare.title, lang)}</h2>
+        <ol class="prepare">{l(prepare.items, lang).map((x) => <li>{x}</li>)}</ol>
+      </section>
+
+      <p class="muted" style="font-size: 0.9375rem">
+        <a href={editUrl('taxonomy/rubric.yaml')}>{t.rubric.edit}</a> · <a href={asset('/taxonomy.json')}>taxonomy.json</a>
+      </p>
+    </div>
+  </div>
+</Base>

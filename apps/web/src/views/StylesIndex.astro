@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import StyleMap from '../components/StyleMap.astro';
+import { styles, taxonomy } from '../lib/data';
+import { pad } from '../lib/format';
+import { l, ui, type Lang } from '../lib/i18n';
+import { asset, href } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<Base lang={lang} path="/styles/" nav="styles" title={t.styles.title} description={l(taxonomy.intro, lang)}>
+  <div class="container">
+    <header class="page-head">
+      <span class="eyebrow">{t.footer.version(taxonomy.version)}</span>
+      <h1>{t.styles.title}</h1>
+      <p class="lead">{l(taxonomy.intro, lang)}</p>
+    </header>
+
+    <div class="stack-lg" style="padding-bottom: clamp(64px, 9vw, 112px)">
+      <section aria-labelledby="map-title" class="stack">
+        <h2 id="map-title" class="eyebrow">{t.styles.mapTitle}</h2>
+        <StyleMap lang={lang} />
+      </section>
+
+      <section aria-labelledby="scenario-title" class="stack">
+        <div class="section-head" style="margin-bottom: 8px">
+          <h2 id="scenario-title">{l(taxonomy.scenario.title, lang)}</h2>
+          <p class="lead">{l(taxonomy.scenario.description, lang)}</p>
+        </div>
+        <ol class="cards">
+          {
+            styles.map((s) => (
+              <li>
+                <a class="card" href={href(lang, `/styles/${s.id}/`)}>
+                  <span class="num">{pad(s.order)}</span>
+                  <h3>{l(s.name, lang)}</h3>
+                  <p>{l(s.summary, lang)}</p>
+                  <span class="more">{t.styles.open} →</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="muted" style="font-size: 0.9375rem">
+          <a href={asset('/taxonomy.json')}>{t.styles.json}</a>
+        </p>
+      </section>
+    </div>
+  </div>
+</Base>

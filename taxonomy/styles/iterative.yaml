@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: iterative
+order: 7
+status: draft
+name:
+  en: Iterative / conversational
+  pt: Iterativo / conversacional
+aka: [conversational, incremental]
+map:
+  how: 58
+  verification: 58
+
+summary:
+  en: Short cycles of ask, review and correct.
+  pt: Ciclos curtos de pedir, revisar e corrigir.
+
+definition:
+  en: >-
+    You build the feature through a conversation: a small request, a careful look at the
+    result, a correction, the next step. Each turn is cheap, and judgment is applied all the
+    time instead of only at the start. Most real work with AI looks like this. The skill is
+    in the quality of each review, not in the first prompt.
+  pt: >-
+    Você constrói a feature numa conversa: um pedido pequeno, uma olhada cuidadosa no
+    resultado, uma correção, o próximo passo. Cada turno custa pouco, e o julgamento é
+    aplicado o tempo todo em vez de só no começo. A maior parte do trabalho real com IA é
+    assim. A habilidade está na qualidade de cada revisão, não no primeiro prompt.
+
+example:
+  note:
+    en: Five turns. Turn 3 catches a problem the model did not mention.
+    pt: Cinco turnos. O turno 3 pega um problema que o modelo não mencionou.
+  prompt:
+    en: |-
+      1. Create a HomeCarousel component that renders images passed as props. No timer yet.
+      2. Good. Now advance every 5s, and clean up the timer on unmount.
+      3. The timer keeps running when the tab is hidden. Pause it on visibilitychange.
+      4. Add lazy loading and a fixed aspect ratio to avoid layout shift.
+      5. Now the double flash on transition. Keep it in CSS, not JS.
+    pt: |-
+      1. Crie um componente HomeCarousel que renderiza as imagens recebidas por props. Sem timer ainda.
+      2. Boa. Agora troque a cada 5s e limpe o timer no unmount.
+      3. O timer continua rodando com a aba escondida. Pause no visibilitychange.
+      4. Adicione lazy load e uma proporção fixa para evitar layout shift.
+      5. Agora a piscada dupla na transição. Faça em CSS, não em JS.
+
+reveals:
+  en:
+    - Debugging skill and critical reading of the output
+    - Ability to break work into reviewable steps
+    - Judgment applied in real time
+  pt:
+    - Capacidade de depuração e leitura crítica do output
+    - Capacidade de quebrar o trabalho em passos revisáveis
+    - Julgamento aplicado em tempo real
+
+use_when:
+  en:
+    - Most day-to-day feature work
+    - Unclear problems where you learn by building
+    - Pairing with an agent on an unfamiliar codebase
+  pt:
+    - A maior parte do trabalho de feature do dia a dia
+    - Problemas pouco claros, em que você aprende construindo
+    - Parear com um agente num codebase desconhecido
+
+watch_out:
+  en:
+    - Endless "still broken, fix it" loops without a diagnosis
+    - Losing track of the overall design across many turns
+    - Context drift in long conversations
+  pt:
+    - Loops infinitos de "continua quebrado, arruma" sem diagnóstico
+    - Perder a visão do design geral depois de muitos turnos
+    - Contexto que se perde em conversas longas
+
+interview:
+  look_for:
+    en:
+      - Is each step small enough to review?
+      - Does the candidate catch problems the model did not mention?
+    pt:
+      - Cada passo é pequeno o suficiente para revisar?
+      - A pessoa pega problemas que o modelo não mencionou?
+  ask:
+    en:
+      - At which step did you catch something the model missed?
+      - When would you throw this conversation away and start over?
+    pt:
+      - Em qual passo você pegou algo que o modelo deixou passar?
+      - Quando você jogaria essa conversa fora e começaria de novo?
+
+origin:
+  summary:
+    en: >-
+      Community practice with no single author. It mirrors iterative and incremental
+      development, and it is how chat-based assistants are used by default.
+    pt: >-
+      Prática da comunidade, sem autor único. Espelha o desenvolvimento iterativo e
+      incremental, e é o jeito padrão de usar assistentes de chat.
+  sources:
+    - title: "Simon Willison: Here's how I use LLMs to help me write code (2025-03-11)"
+      url: https://simonwillison.net/2025/Mar/11/using-llms-for-code/
+    - title: Iterative and incremental development (Wikipedia)
+      url: https://en.wikipedia.org/wiki/Iterative_and_incremental_development
+
+related: [vibe-coding, test-driven, imperative]

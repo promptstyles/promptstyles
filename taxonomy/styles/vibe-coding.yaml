@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: vibe-coding
+order: 3
+status: draft
+name:
+  en: Vibe coding
+  pt: Vibe coding
+map:
+  how: 6
+  verification: 6
+
+summary:
+  en: Describe loosely, accept what comes back, barely read the code.
+  pt: Descreve de forma solta, aceita o que volta e quase não lê o código.
+
+definition:
+  en: >-
+    The far declarative end of the spectrum. You steer by feel, judge the result by running
+    it and paste errors back until it works. The code itself is treated as disposable.
+    Great for throwaway prototypes and exploration. Risky anywhere the code has to be
+    maintained, secured or trusted.
+  pt: >-
+    O extremo declarativo do espectro. Você conduz pela sensação, julga o resultado rodando
+    e cola os erros de volta até funcionar. O código em si é tratado como descartável.
+    Ótimo para protótipos e exploração. Arriscado em qualquer lugar onde o código precise
+    ser mantido, protegido ou confiável.
+
+example:
+  note:
+    en: Two turns. The second one only reacts to how it looks.
+    pt: Dois turnos. O segundo só reage a como ficou na tela.
+  prompt:
+    en: |-
+      make a cool image carousel for the home page with our photos, make it feel alive
+
+      it's kind of janky, fix it and make it smoother
+    pt: |-
+      faz um carrossel de imagens massa pra home com as nossas fotos, deixa com vida
+
+      tá meio travado, arruma e deixa mais suave
+
+reveals:
+  en:
+    - Speed of exploration and willingness to try things
+    - Product intuition, when the result is judged critically
+    - "In production work: a red flag if the person cannot explain the code"
+  pt:
+    - Velocidade de exploração e disposição para testar ideias
+    - Intuição de produto, quando o resultado é avaliado com senso crítico
+    - "Em código de produção: sinal de alerta se a pessoa não consegue explicar o código"
+
+use_when:
+  en:
+    - Throwaway prototypes, demos and spikes
+    - Exploring an unfamiliar idea or API quickly
+    - Personal tools where failure is cheap
+  pt:
+    - Protótipos descartáveis, demos e spikes
+    - Explorar rápido uma ideia ou API desconhecida
+    - Ferramentas pessoais onde errar custa pouco
+
+watch_out:
+  en:
+    - Code nobody understands ends up in the main branch
+    - Security problems (secrets, injection, auth) slip through unread
+    - Errors get "fixed" by piling more generated code on top
+  pt:
+    - Código que ninguém entende vai parar na branch principal
+    - Problemas de segurança (segredos, injection, auth) passam sem ninguém ler
+    - Erros são "corrigidos" empilhando mais código gerado por cima
+
+interview:
+  look_for:
+    en:
+      - Does the candidate say they are prototyping, and switch styles when the stakes rise?
+      - Do they read the diff before accepting it?
+    pt:
+      - A pessoa avisa que está prototipando e troca de estilo quando o risco aumenta?
+      - Ela lê o diff antes de aceitar?
+  ask:
+    en:
+      - Walk me through the part that loads the images, line by line.
+      - What would you change before this goes to production?
+    pt:
+      - Me explica, linha por linha, a parte que carrega as imagens.
+      - O que você mudaria antes de isso ir para produção?
+
+origin:
+  summary:
+    en: >-
+      Coined by Andrej Karpathy in a post on X in February 2025, describing a way of coding
+      where you give in to the vibes and forget the code even exists. The term spread
+      quickly across the industry.
+    pt: >-
+      Cunhado por Andrej Karpathy num post no X em fevereiro de 2025, descrevendo um jeito
+      de programar em que você se entrega às vibes e esquece que o código existe. O termo
+      se espalhou rápido pela indústria.
+  people: [Andrej Karpathy]
+  date: "2025-02-02"
+  sources:
+    - title: "Andrej Karpathy: “There's a new kind of coding I call vibe coding” (X, 2025-02-02)"
+      url: https://x.com/karpathy/status/1886192184808149383
+
+related: [declarative, iterative]

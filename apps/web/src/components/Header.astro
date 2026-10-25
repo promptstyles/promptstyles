@@ -1,0 +1,44 @@
+---
+import Logo from './Logo.astro';
+import { REPO_URL } from '../lib/config';
+import { HTML_LANG, ui, type Lang } from '../lib/i18n';
+import { href } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+  path: string;
+  nav?: string;
+}
+
+const { lang, path, nav } = Astro.props;
+const t = ui[lang];
+const other: Lang = lang === 'en' ? 'pt' : 'en';
+const items = [
+  ['manifesto', '/'],
+  ['styles', '/styles/'],
+  ['rubric', '/rubric/'],
+  ['signatories', '/signatories/'],
+] as const;
+---
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href={href(lang, '/')} aria-label="Prompt Styles">
+      <Logo />
+      <span>promptstyles<span class="tld">.org</span></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      {
+        items.map(([key, p]) => (
+          <a href={href(lang, p)} aria-current={nav === key ? 'page' : undefined}>
+            {t.nav[key]}
+          </a>
+        ))
+      }
+      <a href={REPO_URL}>{t.nav.github}</a>
+      <a class="lang" href={href(other, path)} hreflang={HTML_LANG[other]} lang={HTML_LANG[other]} aria-label={t.switchTo}>
+        {other.toUpperCase()}
+      </a>
+    </nav>
+  </div>
+</header>

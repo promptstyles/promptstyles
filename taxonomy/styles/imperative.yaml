@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: imperative
+order: 2
+status: draft
+name:
+  en: Imperative
+  pt: Imperativo
+aka: [implementation-oriented, step-by-step]
+map:
+  how: 88
+  verification: 52
+
+summary:
+  en: "Dictate how the code should work: data structures, algorithm, control flow."
+  pt: "Dita como o código deve funcionar: estruturas de dados, algoritmo, fluxo de controle."
+
+definition:
+  en: >-
+    You tell the model the implementation step by step: which structures to use, how data
+    flows, what happens on each tick. The model becomes a fast typist for a design that
+    already exists in your head. You get maximum control and an easy review, at the cost of
+    speed and of ideas you would not have had on your own.
+  pt: >-
+    Você passa a implementação para o modelo passo a passo: quais estruturas usar, como os
+    dados fluem, o que acontece a cada ciclo. O modelo vira um digitador rápido para um
+    design que já está na sua cabeça. Você ganha controle máximo e revisão fácil, ao custo
+    de velocidade e de ideias que você não teria sozinho.
+
+example:
+  prompt:
+    en: |-
+      Fetch the latest 5 images from the database into an array.
+      Use setInterval every 5s. On each tick, shift the first item, push it
+      to the end and prefetch the URL of the next image.
+      Use IntersectionObserver for lazy loading.
+      While an image loads, show a skeleton sized from its stored width and height.
+      For the transition, toggle a CSS class twice with 150ms between toggles.
+    pt: |-
+      Busque as últimas 5 imagens do banco num array.
+      Use setInterval a cada 5s. A cada tick, faça shift do primeiro item,
+      dê push no final e faça prefetch da URL da próxima imagem.
+      Use IntersectionObserver para o lazy load.
+      Enquanto a imagem carrega, mostre um skeleton com a largura e a altura salvas.
+      Na transição, alterne uma classe CSS duas vezes com 150ms entre as trocas.
+
+reveals:
+  en:
+    - "Technical depth: data structures, performance, platform APIs"
+    - Architecture and design ability
+    - Capacity to guide and review generated code precisely
+  pt:
+    - "Profundidade técnica: estruturas de dados, performance, APIs da plataforma"
+    - Capacidade de arquitetura e design
+    - Capacidade de guiar e revisar o código gerado com precisão
+
+use_when:
+  en:
+    - Performance-sensitive or security-sensitive code
+    - You already know the right design and want exactly that
+    - Fixing a specific bug or refactoring a known hot spot
+  pt:
+    - Código sensível a performance ou segurança
+    - Você já sabe o design certo e quer exatamente ele
+    - Corrigir um bug específico ou refatorar um ponto crítico conhecido
+
+watch_out:
+  en:
+    - Micromanaging the model can be slower than typing the code yourself
+    - It shuts out better approaches the model might have suggested
+    - Prompts get long and brittle
+  pt:
+    - Microgerenciar o modelo pode ser mais lento que escrever o código você mesmo
+    - Fecha a porta para abordagens melhores que o modelo poderia sugerir
+    - Os prompts ficam longos e frágeis
+
+interview:
+  look_for:
+    en:
+      - Are the dictated decisions correct, and can the candidate justify them?
+      - Does the candidate know when to stop dictating and delegate?
+    pt:
+      - As decisões ditadas estão corretas, e a pessoa consegue justificá-las?
+      - A pessoa sabe a hora de parar de ditar e delegar?
+  ask:
+    en:
+      - Why setInterval here and not requestAnimationFrame or a CSS animation?
+      - What did you dictate that you could have safely delegated?
+    pt:
+      - Por que setInterval aqui e não requestAnimationFrame ou uma animação CSS?
+      - O que você ditou que poderia ter delegado com segurança?
+
+origin:
+  summary:
+    en: >-
+      Borrowed from imperative programming, which describes computation as a sequence of
+      statements that change state. As with declarative, there is no single author for the
+      prompt-style usage.
+    pt: >-
+      Emprestado da programação imperativa, que descreve a computação como uma sequência de
+      comandos que mudam o estado. Assim como no declarativo, não há um autor único para o
+      uso em prompts.
+  sources:
+    - title: Imperative programming (Wikipedia)
+      url: https://en.wikipedia.org/wiki/Imperative_programming
+
+related: [declarative, example-based, iterative]

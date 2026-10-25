@@ -1,0 +1,41 @@
+name: "💡 Propose a style or a change / Propor um estilo ou mudança"
+description: "Suggest a new prompt style, or a change to an existing one or to the rubric."
+title: "Proposal: "
+labels: ["taxonomy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposals are discussed here first. Once there is agreement, anyone can open a pull request editing the YAML files in `taxonomy/`. See CONTRIBUTING.md.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: "What are you proposing?"
+      options:
+        - "A new style"
+        - "A change to an existing style"
+        - "A change to the rubric"
+        - "A change to the manifesto text"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "Proposal"
+      description: "Name, definition and an example prompt (for the shared carousel scenario, if it is a style)."
+    validations:
+      required: true
+
+  - type: textarea
+    id: origin
+    attributes:
+      label: "Origin and sources"
+      description: "Who coined or popularized the term, when, and links to primary sources."
+
+  - type: textarea
+    id: why
+    attributes:
+      label: "Why it matters for evaluating engineers"
+      description: "What does this style reveal about the person using it?"

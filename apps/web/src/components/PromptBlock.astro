@@ -1,0 +1,21 @@
+---
+// Renders an example prompt. Lines starting with "> " are the instruction sent to the model,
+// lines starting with "#" or "//" are context and comments.
+
+interface Props {
+  text: string;
+  label: string;
+}
+
+const { text, label } = Astro.props;
+const lines = text.split('\n').map((raw) => {
+  if (raw.startsWith('> ')) return { cls: 'ln ln-ask', text: raw.slice(2) };
+  if (/^\s*(#|\/\/)/.test(raw)) return { cls: 'ln ln-comment', text: raw };
+  return { cls: 'ln', text: raw };
+});
+---
+
+<figure class="prompt">
+  <figcaption class="prompt-bar"><i></i><i></i><i></i><span>{label}</span></figcaption>
+  <pre>{lines.map((l) => <span class={l.cls}>{l.text}</span>)}</pre>
+</figure>

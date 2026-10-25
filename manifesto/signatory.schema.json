@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://promptstyles.org/schemas/signatory.schema.json",
+  "title": "Signatory",
+  "description": "One person who signed the manifesto. The file name must be <github username in lowercase>.yaml.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["github", "name", "role", "signed_at"],
+  "properties": {
+    "github": {
+      "description": "GitHub username. This is the verified identity of the signature.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$"
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "role": {
+      "description": "engineering = builds software; people = People, HR or recruiting; other = everyone else.",
+      "enum": ["engineering", "people", "other"]
+    },
+    "title": { "type": "string", "maxLength": 80 },
+    "company": {
+      "description": "Shown for identification only. It does not mean the company endorses the manifesto.",
+      "type": "string",
+      "maxLength": 80
+    },
+    "location": { "type": "string", "maxLength": 60 },
+    "link": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 200 },
+    "signed_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "issue": {
+      "description": "Number of the issue that created this signature, when signed through the issue form.",
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

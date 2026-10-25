@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: spec-driven
+order: 4
+status: draft
+name:
+  en: Spec-driven development
+  pt: Spec-driven development
+aka: [SDD, spec-first]
+map:
+  how: 34
+  verification: 78
+
+summary:
+  en: Write a specification first. The AI implements from it.
+  pt: Escreve uma especificação primeiro. A IA implementa a partir dela.
+
+definition:
+  en: >-
+    Before any code, you write (often with the model's help) requirements, a design and a
+    task list. The spec becomes the source of truth: the model implements one task at a time
+    against it, and every change starts by updating the spec. It trades upfront time for
+    predictability on larger features.
+  pt: >-
+    Antes de qualquer código, você escreve (muitas vezes com ajuda do modelo) requisitos,
+    design e uma lista de tarefas. A spec vira a fonte da verdade: o modelo implementa uma
+    tarefa por vez em cima dela, e toda mudança começa atualizando a spec. Troca tempo no
+    início por previsibilidade em features maiores.
+
+example:
+  note:
+    en: A short SPEC.md, then a prompt that points at one task.
+    pt: Um SPEC.md curto e depois um prompt que aponta para uma tarefa.
+  prompt:
+    en: |-
+      # SPEC.md: Home carousel
+      ## Requirements
+      R1. Show the 5 most recent published images.
+      R2. Advance every 5s; pause on hover or touch.
+      R3. Lazy-load images outside the viewport.
+      R4. Flash twice (2 x 150ms) on each transition.
+      ## Acceptance criteria
+      - With 0 images, render nothing and log no errors.
+      - If an image fails to load, skip to the next one.
+      ## Tasks
+      1. Data hook useCarouselImages() (R1)
+      2. Carousel component with timer (R2, R4)
+      3. Lazy loading and error handling (R3)
+
+      > Implement task 1 from SPEC.md. Do not start task 2.
+      > If you find a gap in the spec, stop and propose an update.
+    pt: |-
+      # SPEC.md: Carrossel da home
+      ## Requisitos
+      R1. Mostrar as 5 imagens publicadas mais recentes.
+      R2. Trocar a cada 5s; pausar com hover ou toque.
+      R3. Lazy load das imagens fora da tela.
+      R4. Piscar duas vezes (2 x 150ms) a cada troca.
+      ## Critérios de aceite
+      - Com 0 imagens, não renderizar nada e não logar erro.
+      - Se uma imagem falhar, pular para a próxima.
+      ## Tarefas
+      1. Hook de dados useCarouselImages() (R1)
+      2. Componente do carrossel com timer (R2, R4)
+      3. Lazy load e tratamento de erro (R3)
+
+      > Implemente a tarefa 1 do SPEC.md. Não comece a tarefa 2.
+      > Se encontrar uma lacuna na spec, pare e proponha uma atualização.
+
+reveals:
+  en:
+    - Engineering discipline and problem decomposition
+    - Ability to write unambiguous requirements and acceptance criteria
+    - "Thinking about change: how the spec evolves with the code"
+  pt:
+    - Disciplina de engenharia e decomposição de problemas
+    - Capacidade de escrever requisitos e critérios de aceite sem ambiguidade
+    - "Pensamento sobre mudança: como a spec evolui junto com o código"
+
+use_when:
+  en:
+    - Features that span many files or several days
+    - Work shared between several people or agents
+    - Domains where requirements must be auditable
+  pt:
+    - Features que atravessam muitos arquivos ou vários dias
+    - Trabalho dividido entre várias pessoas ou agentes
+    - Domínios em que os requisitos precisam ser auditáveis
+
+watch_out:
+  en:
+    - Over-specifying small tasks (waterfall in miniature)
+    - The spec and the code drifting apart
+    - Treating the spec as finished instead of as a living document
+  pt:
+    - Especificar demais tarefas pequenas (cascata em miniatura)
+    - Spec e código se distanciando com o tempo
+    - Tratar a spec como pronta em vez de um documento vivo
+
+interview:
+  look_for:
+    en:
+      - Is the spec testable (acceptance criteria), or just prose?
+      - Does the candidate implement in small steps and check each one against the spec?
+    pt:
+      - A spec é testável (critérios de aceite) ou é só texto?
+      - A pessoa implementa em passos pequenos e confere cada um contra a spec?
+  ask:
+    en:
+      - Which requirement was the hardest to state precisely?
+      - If product changes R2 tomorrow, what is your workflow?
+    pt:
+      - Qual requisito foi o mais difícil de escrever com precisão?
+      - Se produto mudar o R2 amanhã, qual é o seu fluxo?
+
+origin:
+  summary:
+    en: >-
+      Writing specifications before code is an old engineering practice, and the name
+      "specification-driven development" appears in research as early as 2004. As an AI coding
+      workflow, it was popularized in 2025 by AWS Kiro (July) and GitHub Spec Kit (September),
+      tools that turn a spec into a plan and a task list for an agent.
+    pt: >-
+      Escrever especificações antes do código é uma prática antiga de engenharia, e o nome
+      "specification-driven development" aparece em pesquisa desde 2004. Como fluxo de AI coding,
+      foi popularizado em 2025 pelo AWS Kiro (julho) e pelo GitHub Spec Kit (setembro),
+      ferramentas que transformam uma spec em plano e lista de tarefas para um agente.
+  date: "2025-07-14"
+  sources:
+    - title: "Kiro: Introducing Kiro (2025-07-14)"
+      url: https://kiro.dev/blog/introducing-kiro/
+    - title: "GitHub Blog: Spec-driven development with AI (2025-09-02)"
+      url: https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/
+    - title: GitHub Spec Kit (repository)
+      url: https://github.com/github/spec-kit
+    - title: "Birgitta Böckeler: Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl (2025)"
+      url: https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html
+    - title: "Ostroff, Makalsky, Paige: Agile Specification-Driven Development (2004)"
+      url: https://doi.org/10.1007/978-3-540-24853-8_12
+
+related: [test-driven, declarative, context-engineering]

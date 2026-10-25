@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui } from '../lib/i18n';
+import { href } from '../lib/url';
+
+const en = ui.en.notFound;
+const pt = ui.pt.notFound;
+---
+
+<Base lang="en" path="/404/" title={en.title}>
+  <div class="container">
+    <header class="page-head">
+      <span class="eyebrow">404</span>
+      <h1>{en.title}</h1>
+      <p class="lead">{en.body} <span lang="pt-BR" class="muted">{pt.body}</span></p>
+      <div class="actions">
+        <a class="btn btn-primary" href={href('en', '/')}>{en.home}</a>
+        <a class="btn btn-secondary" href={href('pt', '/')} lang="pt-BR">{pt.home}</a>
+      </div>
+    </header>
+  </div>
+</Base>

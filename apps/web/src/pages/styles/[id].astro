@@ -1,0 +1,12 @@
+---
+import StyleDetail from '../../views/StyleDetail.astro';
+import { styles, type Style } from '../../lib/data';
+
+export function getStaticPaths() {
+  return styles.map((style) => ({ params: { id: style.id }, props: { style } }));
+}
+
+const { style } = Astro.props as { style: Style };
+---
+
+<StyleDetail lang="en" style={style} />

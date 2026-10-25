@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import SignButton from '../components/SignButton.astro';
+import { FOUNDING_LIMIT, SIGN_URL, blobUrl } from '../lib/config';
+import { loadManifesto, roleCounts, signatories } from '../lib/data';
+import { formatDate } from '../lib/format';
+import { ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const m = loadManifesto(lang);
+const counts = roleCounts(signatories);
+const roles = (['engineering', 'people', 'other'] as const).filter((r) => counts[r]);
+// Newest first on the page; the number shows the signing order.
+const list = signatories.map((s, i) => ({ ...s, n: i + 1 })).reverse();
+---
+
+<Base lang={lang} path="/signatories/" nav="signatories" title={t.signatories.title} description={t.signatories.lead}>
+  <div class="container">
+    <header class="page-head">
+      <span class="eyebrow">{t.count(signatories.length)}</span>
+      <h1>{t.signatories.title}</h1>
+      <p class="lead">{t.signatories.lead}</p>
+      <div class="actions">
+        <SignButton lang={lang} />
+      </div>
+    </header>
+
+    <div class="stack-lg" style="padding-bottom: clamp(64px, 9vw, 112px)">
+      <section class="stack" aria-labelledby="how-title">
+        <h2 id="how-title" class="eyebrow">{t.signatories.how}</h2>
+        <ol class="how">{t.signatories.steps.map((s) => <li>{s}</li>)}</ol>
+        <div class="notes">
+          <p>{t.signatories.review}</p>
+          <p>
+            <a href={blobUrl('manifesto/signatory.schema.json')}>{t.signatories.pr}</a>
+          </p>
+          <p>{t.signatories.remove}</p>
+          {m.footnote && <p set:html={m.footnote} />}
+        </div>
+      </section>
+
+      <section aria-label={t.signatories.title}>
+        {
+          list.length === 0 ? (
+            <div class="empty stack" style="justify-items: center">
+              <p>{t.signatories.empty}</p>
+              <a class="link-arrow" href={SIGN_URL}>
+                {t.cta.sign}
+              </a>
+            </div>
+          ) : (
+            <>
+              {roles.length > 1 && (
+                <div class="filters" role="group">
+                  <button type="button" data-value="all" aria-pressed="true">
+                    {t.signatories.filterAll}
+                    <span>{signatories.length}</span>
+                  </button>
+                  {roles.map((r) => (
+                    <button type="button" data-value={r} aria-pressed="false">
+                      {t.roles[r]}
+                      <span>{counts[r]}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+              <ul class="people" data-filter="all">
+                {list.map((s) => (
+                  <li data-role={s.role}>
+                    <div class="person">
+                      <img src={`https://github.com/${s.github}.png?size=96`} alt="" width="48" height="48" loading="lazy" />
+                      <div class="who">
+                        <a class="name" href={s.link || `https://github.com/${s.github}`} rel="noopener nofollow ugc">
+                          {s.name}
+                        </a>
+                        <span class="meta">
+                          {[s.title, s.company].filter(Boolean).join(' · ') || `@${s.github}`}
+                        </span>
+                      </div>
+                      <div class="tags">
+                        <span class="badge" title={formatDate(String(s.signed_at), lang)}>
+                          #{s.n}
+                        </span>
+                        <span class="badge">{t.roles[s.role]}</span>
+                        {s.n <= FOUNDING_LIMIT && <span class="badge badge-accent">{t.signatories.founding}</span>}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+      </section>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('.people');
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  buttons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      if (grid) grid.dataset.filter = btn.dataset.value ?? 'all';
+    }),
+  );
+</script>

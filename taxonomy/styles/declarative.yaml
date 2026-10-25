@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: declarative
+order: 1
+status: draft
+name:
+  en: Declarative
+  pt: Declarativo
+aka: [outcome-oriented, result-driven]
+map:
+  how: 22
+  verification: 38
+
+summary:
+  en: Describe what the software must do and let the AI decide how.
+  pt: Descreve o que o software precisa fazer e deixa a IA decidir como.
+
+definition:
+  en: >-
+    You specify behavior, business rules and user experience, and leave data structures,
+    algorithms and file layout to the model. Strong declarative prompts are precise about
+    outcomes and constraints and silent about implementation. This is how product-minded
+    engineers usually start a feature.
+  pt: >-
+    Você especifica comportamento, regras de negócio e experiência do usuário, e deixa
+    estruturas de dados, algoritmo e organização dos arquivos com o modelo. Um bom prompt
+    declarativo é preciso sobre resultado e restrições, e não fala nada de implementação.
+    É assim que engenheiros com cabeça de produto costumam começar uma feature.
+
+example:
+  prompt:
+    en: |-
+      Create an image carousel for the home page.
+      - Show the 5 most recent images from the database.
+      - Advance every 5 seconds.
+      - Lazy-load images that are not visible yet.
+      - Flash twice when switching images.
+      - Work on mobile and pause while the user hovers or touches it.
+    pt: |-
+      Crie um carrossel de imagens para a home.
+      - Mostre as 5 imagens mais recentes do banco.
+      - Troque a cada 5 segundos.
+      - Faça lazy load das imagens que ainda não estão visíveis.
+      - Pisque duas vezes ao trocar de imagem.
+      - Funcione no celular e pause enquanto o usuário passa o mouse ou toca nele.
+
+reveals:
+  en:
+    - Ability to specify a problem clearly and completely
+    - "Product thinking: edge cases, UX, constraints"
+    - Knowing which details matter and which can be delegated
+  pt:
+    - Capacidade de especificar um problema de forma clara e completa
+    - "Pensamento de produto: casos de borda, UX, restrições"
+    - Saber quais detalhes importam e quais podem ser delegados
+
+use_when:
+  en:
+    - The outcome is clearer than the design
+    - The codebase has strong conventions the model can follow
+    - UI and product work
+  pt:
+    - O resultado está mais claro que o design
+    - O codebase tem convenções fortes que o modelo consegue seguir
+    - Trabalho de UI e produto
+
+watch_out:
+  en:
+    - "Ambiguity: the model fills every gap with its own assumptions"
+    - Accepting whatever architecture comes back without reviewing it
+    - Hard to steer once the implementation goes in the wrong direction
+  pt:
+    - "Ambiguidade: o modelo preenche cada lacuna com as próprias suposições"
+    - Aceitar qualquer arquitetura que vier sem revisar
+    - Difícil de corrigir o rumo quando a implementação vai para o lado errado
+
+interview:
+  look_for:
+    en:
+      - Are requirements, constraints and edge cases stated before anything is generated?
+      - Does the candidate review the implementation, or only the visible behavior?
+    pt:
+      - Requisitos, restrições e casos de borda são ditos antes de gerar qualquer coisa?
+      - A pessoa revisa a implementação ou só o comportamento visível?
+  ask:
+    en:
+      - Which decisions did you leave to the model, and why were they safe to delegate?
+      - What would you have specified differently if this were a checkout page?
+    pt:
+      - Quais decisões você deixou com o modelo, e por que era seguro delegar?
+      - O que você especificaria diferente se isso fosse uma página de checkout?
+
+origin:
+  summary:
+    en: >-
+      Borrowed from declarative programming (SQL, HTML, functional and logic languages),
+      which describes the desired result instead of the steps to reach it. No single author
+      applied the term to prompts; the declarative vs. imperative framing for AI coding is
+      community usage.
+    pt: >-
+      Emprestado da programação declarativa (SQL, HTML, linguagens funcionais e lógicas),
+      que descreve o resultado desejado em vez dos passos para chegar nele. Nenhum autor
+      específico aplicou o termo a prompts; a divisão declarativo vs. imperativo em AI coding
+      é uso da comunidade.
+  sources:
+    - title: Declarative programming (Wikipedia)
+      url: https://en.wikipedia.org/wiki/Declarative_programming
+
+related: [imperative, vibe-coding, spec-driven]

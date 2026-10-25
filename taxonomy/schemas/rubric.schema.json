@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://promptstyles.org/schemas/rubric.schema.json",
+  "title": "Evaluation rubric",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["intro", "levels", "dimensions", "interview", "prepare"],
+  "properties": {
+    "intro": { "$ref": "common.schema.json#/definitions/text" },
+    "levels": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["level", "name", "summary"],
+        "properties": {
+          "level": { "type": "integer", "minimum": 1 },
+          "name": { "$ref": "common.schema.json#/definitions/text" },
+          "summary": { "$ref": "common.schema.json#/definitions/text" }
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "question", "descriptors"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/definitions/slug" },
+          "name": { "$ref": "common.schema.json#/definitions/text" },
+          "question": { "$ref": "common.schema.json#/definitions/text" },
+          "descriptors": {
+            "description": "One descriptor per level, in level order.",
+            "type": "array",
+            "items": { "$ref": "common.schema.json#/definitions/text" }
+          }
+        }
+      }
+    },
+    "interview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "steps", "scoring", "green_flags", "red_flags"],
+      "properties": {
+        "title": { "$ref": "common.schema.json#/definitions/text" },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["minutes", "name", "description"],
+            "properties": {
+              "minutes": { "type": "integer", "minimum": 1 },
+              "name": { "$ref": "common.schema.json#/definitions/text" },
+              "description": { "$ref": "common.schema.json#/definitions/text" }
+            }
+          }
+        },
+        "scoring": { "$ref": "common.schema.json#/definitions/list" },
+        "green_flags": { "$ref": "common.schema.json#/definitions/list" },
+        "red_flags": { "$ref": "common.schema.json#/definitions/list" }
+      }
+    },
+    "prepare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "items"],
+      "properties": {
+        "title": { "$ref": "common.schema.json#/definitions/text" },
+        "items": { "$ref": "common.schema.json#/definitions/list" }
+      }
+    }
+  }
+}

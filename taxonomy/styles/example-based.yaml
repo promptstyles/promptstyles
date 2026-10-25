@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: example-based
+order: 6
+status: draft
+name:
+  en: Example-based (few-shot)
+  pt: Baseado em exemplos (few-shot)
+aka: [few-shot, pattern-following, "do it like this"]
+map:
+  how: 68
+  verification: 46
+
+summary:
+  en: Point to an existing pattern and ask for the same thing, adapted.
+  pt: Aponta para um padrão que já existe e pede o mesmo, adaptado.
+
+definition:
+  en: >-
+    Instead of describing the solution, you show it: an existing component, test or module
+    that already follows the house style. Then you ask for the new thing in the same shape.
+    It relies on knowing the codebase well and is the fastest route to consistent code.
+  pt: >-
+    Em vez de descrever a solução, você mostra: um componente, teste ou módulo que já segue
+    o padrão da casa. Depois pede a coisa nova no mesmo formato. Depende de conhecer bem o
+    codebase e é o caminho mais rápido para código consistente.
+
+example:
+  prompt:
+    en: |-
+      Look at src/components/ProductSlider.tsx and its test.
+      Build src/components/HomeCarousel.tsx following the same patterns:
+      the same data-fetching hook, the same <LazyImage /> component,
+      the same test layout.
+
+      Differences: 5 images from the `images` table, 5s interval,
+      flash twice on transition.
+    pt: |-
+      Olhe src/components/ProductSlider.tsx e o teste dele.
+      Crie src/components/HomeCarousel.tsx seguindo os mesmos padrões:
+      o mesmo hook de busca de dados, o mesmo componente <LazyImage />,
+      a mesma estrutura de teste.
+
+      Diferenças: 5 imagens da tabela `images`, intervalo de 5s,
+      piscar duas vezes na transição.
+
+reveals:
+  en:
+    - Knowledge of the codebase and its conventions
+    - Focus on consistency and maintainability
+    - Ability to pick a good reference, not just any similar file
+  pt:
+    - Conhecimento do codebase e das suas convenções
+    - Foco em consistência e manutenção
+    - Capacidade de escolher uma boa referência, não qualquer arquivo parecido
+
+use_when:
+  en:
+    - Adding one more of something that already exists
+    - Keeping conventions in a large codebase
+    - Migrations repeated across many files
+  pt:
+    - Adicionar mais um de algo que já existe
+    - Manter convenções num codebase grande
+    - Migrações repetidas em muitos arquivos
+
+watch_out:
+  en:
+    - Copying the reference's bugs and tech debt
+    - Picking an outdated example
+    - Forcing a pattern onto a problem it does not fit
+  pt:
+    - Copiar os bugs e a dívida técnica da referência
+    - Escolher um exemplo desatualizado
+    - Forçar um padrão num problema em que ele não se encaixa
+
+interview:
+  look_for:
+    en:
+      - Why that reference? Is it the best example in the codebase?
+      - Does the candidate state the differences explicitly?
+    pt:
+      - Por que essa referência? É o melhor exemplo do codebase?
+      - A pessoa deixa as diferenças explícitas?
+  ask:
+    en:
+      - What would make ProductSlider a bad reference here?
+      - What did the model copy that it should not have?
+    pt:
+      - O que faria do ProductSlider uma referência ruim aqui?
+      - O que o modelo copiou que não deveria?
+
+origin:
+  summary:
+    en: >-
+      From few-shot prompting: giving a model a few examples of a task inside the prompt.
+      The term was established by Brown et al. in "Language Models are Few-Shot Learners",
+      the GPT-3 paper (2020).
+    pt: >-
+      Vem do few-shot prompting: dar ao modelo alguns exemplos da tarefa dentro do prompt.
+      O termo foi consolidado por Brown et al. em "Language Models are Few-Shot Learners",
+      o paper do GPT-3 (2020).
+  people: [Tom B. Brown et al.]
+  date: "2020-05-28"
+  sources:
+    - title: "Brown et al.: Language Models are Few-Shot Learners (arXiv:2005.14165, 2020)"
+      url: https://arxiv.org/abs/2005.14165
+
+related: [context-engineering, imperative]

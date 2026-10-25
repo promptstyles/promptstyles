@@ -1,0 +1,26 @@
+# Creates the labels the signature flow needs. Runs once on the first push and can be run by hand.
+# Issue forms only apply labels that already exist, so "signature" must exist before anyone signs.
+
+name: Labels
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/labels.yml]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - run: |
+          gh label create signature    --force --color 0E8A16 --description "A signature for the manifesto"
+          gh label create needs-review --force --color FBCA04 --description "Signature from a new account, waiting for a maintainer"
+          gh label create approved     --force --color 1D76DB --description "Maintainer approved this signature"
+          gh label create taxonomy     --force --color 5319E7 --description "Proposal for the taxonomy, rubric or manifesto"

@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import Counter from '../components/Counter.astro';
+import SignButton from '../components/SignButton.astro';
+import StyleMap from '../components/StyleMap.astro';
+import { interviewMinutes, loadManifesto, rubric, styles, taxonomy } from '../lib/data';
+import { l, ui, type Lang } from '../lib/i18n';
+import { href } from '../lib/url';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const m = loadManifesto(lang);
+---
+
+<Base lang={lang} path="/" nav="manifesto">
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">{t.hero.eyebrow} · v{taxonomy.version}</span>
+      <h1>{t.hero.title} <em>{t.hero.titleEmphasis}</em></h1>
+      <p class="lead">{t.hero.lead}</p>
+      <div class="actions">
+        <SignButton lang={lang} />
+        <a class="btn btn-secondary" href={href(lang, '/styles/')}>{t.cta.styles}</a>
+      </div>
+      <Counter lang={lang} />
+    </div>
+  </section>
+
+  <section class="section" id="manifesto" aria-labelledby="manifesto-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" id="manifesto-title">{m.title}</span>
+      </div>
+      <div class="manifesto-intro">
+        {m.intro.map((p) => <p set:html={p} />)}
+      </div>
+
+      <h2 class="values-title">{m.valuesTitle}</h2>
+      <ul class="values">
+        {
+          m.values.map((v) => (
+            <li>
+              <span class="left" set:html={v.left} />
+              <span class="rest">
+                <span class="connector">{v.connector}</span>
+                <span class="right" set:html={v.right} />
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="closing" set:html={m.closing} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="principles-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="eyebrow" id="principles-title">{m.principlesTitle}</h2>
+      </div>
+      <ol class="principles">
+        {
+          m.principles.map((p) => (
+            <li>
+              <h3 set:html={p.title} />
+              <p set:html={p.body} />
+            </li>
+          ))
+        }
+      </ol>
+      {m.footnote && <p class="footnote" set:html={m.footnote} />}
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">{t.nav.styles}</span>
+        <h2>{t.home.stylesTitle(styles.length)}</h2>
+        <p class="lead">{l(taxonomy.intro, lang)}</p>
+        <a class="link-arrow" href={href(lang, '/styles/')}>{t.cta.styles}</a>
+      </div>
+      <StyleMap lang={lang} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">{t.nav.rubric}</span>
+        <h2>{t.home.rubricTitle}</h2>
+        <p class="lead">{t.home.rubricBody(rubric.levels.length, rubric.dimensions.length, interviewMinutes)}</p>
+        <a class="link-arrow" href={href(lang, '/rubric/')}>{t.cta.rubric}</a>
+      </div>
+      <ol class="levels">
+        {
+          rubric.levels.map((lv) => (
+            <li>
+              <span class="lvl">{lv.level}</span>
+              <h3>{l(lv.name, lang)}</h3>
+              <p>{l(lv.summary, lang)}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sign-block">
+        <span class="eyebrow">{m.title}</span>
+        <h2>{t.home.signTitle}</h2>
+        <p>{t.home.signBody}</p>
+        <div class="actions">
+          <SignButton lang={lang} />
+          <a class="btn btn-secondary" href={href(lang, '/signatories/')}>{t.cta.allSignatories}</a>
+        </div>
+        <Counter lang={lang} />
+      </div>
+    </div>
+  </section>
+</Base>

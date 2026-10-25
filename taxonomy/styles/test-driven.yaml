@@ -1,0 +1,128 @@
+# yaml-language-server: $schema=../schemas/style.schema.json
+id: test-driven
+order: 5
+status: draft
+name:
+  en: Test-driven prompting
+  pt: Test-driven prompting
+aka: [TDD with AI, tests-first]
+map:
+  how: 50
+  verification: 94
+
+summary:
+  en: Write the tests first and ask the AI to make them pass.
+  pt: Escreve os testes primeiro e pede para a IA fazer o código passar neles.
+
+definition:
+  en: >-
+    You express the contract as executable tests, then ask the model to implement until they
+    pass, without touching the tests. Tests turn a vague request into an objective target and
+    give both you and the model a fast feedback loop. It works especially well with agents
+    that can run the test suite on their own.
+  pt: >-
+    Você expressa o contrato como testes executáveis e pede para o modelo implementar até
+    passarem, sem mexer nos testes. Os testes transformam um pedido vago num alvo objetivo e
+    dão a você e ao modelo um ciclo de feedback rápido. Funciona muito bem com agentes que
+    conseguem rodar a suíte de testes sozinhos.
+
+example:
+  note:
+    en: The test file is written by you. The prompt only sets the rules.
+    pt: O arquivo de teste é escrito por você. O prompt só define as regras.
+  prompt:
+    en: |-
+      // carousel.test.ts (written by you)
+      it('shows the 5 most recent images', ...)
+      it('advances every 5 seconds', ...)
+      it('pauses while hovered', ...)
+      it('flashes twice on transition', ...)
+      it('skips an image that fails to load', ...)
+
+      > Implement <HomeCarousel /> so every test in carousel.test.ts passes.
+      > Do not modify the test file. Run the tests after each change
+      > and stop when they are all green.
+    pt: |-
+      // carousel.test.ts (escrito por você)
+      it('mostra as 5 imagens mais recentes', ...)
+      it('troca a cada 5 segundos', ...)
+      it('pausa com hover', ...)
+      it('pisca duas vezes na transição', ...)
+      it('pula uma imagem que falhou ao carregar', ...)
+
+      > Implemente <HomeCarousel /> para todos os testes de carousel.test.ts passarem.
+      > Não altere o arquivo de teste. Rode os testes depois de cada mudança
+      > e pare quando estiverem todos verdes.
+
+reveals:
+  en:
+    - Thinking in contracts and observable behavior
+    - Commitment to quality and verification
+    - Ability to design testable code
+  pt:
+    - Pensamento em contratos e comportamento observável
+    - Compromisso com qualidade e verificação
+    - Capacidade de desenhar código testável
+
+use_when:
+  en:
+    - Logic with clear inputs and outputs
+    - "Bug fixes: write the failing test first"
+    - Agent workflows where the model can run the tests itself
+  pt:
+    - Lógica com entradas e saídas claras
+    - "Correção de bug: escreva o teste que falha primeiro"
+    - Fluxos com agentes em que o modelo consegue rodar os testes sozinho
+watch_out:
+  en:
+    - "The model cheating: special-casing tests or quietly editing them"
+    - Tests that only cover the happy path
+    - Testing implementation details instead of behavior
+  pt:
+    - "O modelo trapaceando: tratando casos de teste à parte ou editando os testes"
+    - Testes que só cobrem o caminho feliz
+    - Testar detalhe de implementação em vez de comportamento
+
+interview:
+  look_for:
+    en:
+      - Do the tests describe behavior or implementation?
+      - Does the candidate check that the model did not weaken the tests?
+    pt:
+      - Os testes descrevem comportamento ou implementação?
+      - A pessoa confere se o modelo não enfraqueceu os testes?
+  ask:
+    en:
+      - Which test is missing from this suite?
+      - How would you notice if the model had special-cased a test?
+    pt:
+      - Qual teste está faltando nessa suíte?
+      - Como você perceberia se o modelo tivesse tratado um teste como caso especial?
+
+origin:
+  summary:
+    en: >-
+      Derived from test-driven development (TDD), which Kent Beck rediscovered and popularized
+      through Extreme Programming and described in "Test-Driven Development: By Example" (2002).
+      Beck himself later applied TDD to coding agents in "Augmented Coding: Beyond the Vibes"
+      (2025), and Simon Willison documents "red/green TDD" as an agentic engineering pattern.
+      Nobody is credited with the name "test-driven prompting".
+    pt: >-
+      Derivado do test-driven development (TDD), que Kent Beck redescobriu e popularizou com o
+      Extreme Programming e descreveu em "Test-Driven Development: By Example" (2002). O próprio
+      Beck depois aplicou TDD a agentes de código em "Augmented Coding: Beyond the Vibes" (2025),
+      e Simon Willison documenta o "red/green TDD" como um padrão de engenharia com agentes.
+      Ninguém leva o crédito pelo nome "test-driven prompting".
+  people: [Kent Beck]
+  date: "2002"
+  sources:
+    - title: "Kent Beck: Test-Driven Development: By Example (Addison-Wesley, 2002)"
+      url: https://www.informit.com/store/test-driven-development-by-example-9780321146533
+    - title: "Kent Beck: Augmented Coding: Beyond the Vibes (2025-06-25)"
+      url: https://newsletter.kentbeck.com/p/augmented-coding-beyond-the-vibes
+    - title: "Simon Willison: Red/green TDD (Agentic Engineering Patterns)"
+      url: https://simonwillison.net/guides/agentic-engineering-patterns/red-green-tdd/
+    - title: "Mathews, Nagappan: Test-Driven Development for Code Generation (2024)"
+      url: https://arxiv.org/abs/2402.13521
+
+related: [spec-driven, iterative, imperative]

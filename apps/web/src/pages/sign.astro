@@ -1,0 +1,18 @@
+---
+// Short link for invitations: promptstyles.org/sign opens the signature form on GitHub.
+import { SIGN_URL } from '../lib/config';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${SIGN_URL}`} />
+    <title>Sign the Prompt Styles Manifesto</title>
+  </head>
+  <body style="font-family: system-ui, sans-serif; padding: 24px">
+    <p>Opening the signature form on GitHub… <a href={SIGN_URL}>Continue</a></p>
+  </body>
+</html>

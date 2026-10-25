@@ -1,0 +1,28 @@
+{
+  "name": "promptstyles",
+  "private": true,
+  "type": "module",
+  "description": "An open manifesto, taxonomy and rubric for AI-assisted software engineering and hiring.",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "taxonomy"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @promptstyles/web",
+    "build": "npm run validate && npm run build -w @promptstyles/web",
+    "preview": "npm run preview -w @promptstyles/web",
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test \"scripts/**/*.test.mjs\"",
+    "og": "bash scripts/og/render.sh",
+    "check": "npm run check -w @promptstyles/web"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "yaml": "^2.9.1"
+  },
+  "engines": {
+    "node": ">=22.23"
+  }
+}

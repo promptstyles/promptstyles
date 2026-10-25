@@ -1,0 +1,83 @@
+# Turns a signature issue (opened with .github/ISSUE_TEMPLATE/sign.yml) into a file in
+# manifesto/signatories/, commits it, replies on the issue and republishes the site.
+#
+# The issue body is untrusted: it is only read by scripts/sign.mjs, never interpolated into a shell.
+# Signatures from accounts younger than 30 days wait for a maintainer to add the "approved" label.
+
+name: Sign
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: signatures
+  cancel-in-progress: false
+
+jobs:
+  sign:
+    if: >-
+      github.event.issue.state == 'open' &&
+      contains(github.event.issue.labels.*.name, 'signature') &&
+      (github.event.action == 'opened' || github.event.label.name == 'approved')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      NUMBER: ${{ github.event.issue.number }}
+      COMMENT_FILE: ${{ runner.temp }}/comment.md
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Read the signature
+        id: sign
+        run: node scripts/sign.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit the signature
+        if: steps.sign.outputs.status == 'signed' || steps.sign.outputs.status == 'updated'
+        env:
+          FILE: ${{ steps.sign.outputs.file }}
+          LOGIN: ${{ github.event.issue.user.login }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "$FILE"
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git commit -m "Add signature: @$LOGIN (#$NUMBER)"
+          for attempt in 1 2 3; do
+            git pull --rebase --quiet && git push && exit 0
+            sleep $((attempt * 5))
+          done
+          exit 1
+
+      - name: Reply on the issue
+        # Runs only if the commit worked (or was not needed), so nobody is told "signed" by mistake.
+        if: steps.sign.outputs.status != ''
+        env:
+          STATUS: ${{ steps.sign.outputs.status }}
+        run: |
+          gh issue comment "$NUMBER" --body-file "$COMMENT_FILE"
+          case "$STATUS" in
+            signed|updated) gh issue close "$NUMBER" --reason completed ;;
+            review) gh issue edit "$NUMBER" --add-label needs-review ;;
+            invalid) gh issue close "$NUMBER" --reason "not planned" ;;
+          esac
+
+      - name: Publish the site
+        # Pushes made with GITHUB_TOKEN do not trigger other workflows, so start the deploy explicitly.
+        if: steps.sign.outputs.status == 'signed' || steps.sign.outputs.status == 'updated'
+        run: gh workflow run deploy.yml --ref main

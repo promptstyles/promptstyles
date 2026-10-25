@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://promptstyles.org/schemas/taxonomy.schema.json",
+  "title": "Taxonomy metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "updated", "intro", "note", "axes", "scenario"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "updated": { "$ref": "common.schema.json#/definitions/date" },
+    "intro": { "$ref": "common.schema.json#/definitions/text" },
+    "note": { "$ref": "common.schema.json#/definitions/text" },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["how", "verification"],
+      "properties": {
+        "how": { "$ref": "#/definitions/axis" },
+        "verification": { "$ref": "#/definitions/axis" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "description"],
+      "properties": {
+        "title": { "$ref": "common.schema.json#/definitions/text" },
+        "description": { "$ref": "common.schema.json#/definitions/text" }
+      }
+    }
+  },
+  "definitions": {
+    "axis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["low", "high"],
+      "properties": {
+        "low": { "$ref": "common.schema.json#/definitions/text" },
+        "high": { "$ref": "common.schema.json#/definitions/text" }
+      }
+    }
+  }
+}

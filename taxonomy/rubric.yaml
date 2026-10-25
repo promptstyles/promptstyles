@@ -1,0 +1,191 @@
+# yaml-language-server: $schema=./schemas/rubric.schema.json
+# Evaluation rubric for AI-assisted engineering interviews.
+# Score each dimension from 1 to 4, with written evidence.
+
+intro:
+  en: >-
+    A rubric for interviews where candidates build with AI. It scores the process, not just
+    the code: how the problem is framed, how the model is directed, how the output is checked
+    and who really owns the result. Share it with candidates before the interview.
+  pt: >-
+    Uma rubrica para entrevistas em que o candidato constrói com IA. Ela avalia o processo,
+    não só o código: como o problema é enquadrado, como o modelo é conduzido, como o output é
+    verificado e quem de fato é dono do resultado. Compartilhe com o candidato antes da entrevista.
+
+levels:
+  - level: 1
+    name: { en: Operator, pt: Operador }
+    summary:
+      en: Uses a single style and accepts the output without real review.
+      pt: Usa um único estilo e aceita o output sem revisar de verdade.
+  - level: 2
+    name: { en: Practitioner, pt: Praticante }
+    summary:
+      en: Switches between describing and dictating, reviews the code and fixes errors.
+      pt: Alterna entre descrever e ditar, revisa o código e corrige os erros.
+  - level: 3
+    name: { en: Engineer, pt: Engenheiro }
+    summary:
+      en: Chooses the style by risk and complexity, uses tests and specs as contracts, manages context.
+      pt: Escolhe o estilo pelo risco e pela complexidade, usa testes e specs como contrato, gerencia o contexto.
+  - level: 4
+    name: { en: Architect, pt: Arquiteto }
+    summary:
+      en: Sets standards for the team, knows when not to use AI, weighs cost, security and maintenance.
+      pt: Define padrões para o time, sabe quando não usar IA, pesa custo, segurança e manutenção.
+
+dimensions:
+  - id: framing
+    name: { en: Problem framing, pt: Enquadramento do problema }
+    question:
+      en: Does the candidate understand and specify the problem before generating code?
+      pt: A pessoa entende e especifica o problema antes de gerar código?
+    descriptors:
+      - en: Pastes the task into the model as it is.
+        pt: Cola a tarefa no modelo do jeito que veio.
+      - en: Restates the task and adds the obvious requirements.
+        pt: Reescreve a tarefa e adiciona os requisitos óbvios.
+      - en: States requirements, constraints and edge cases, and asks clarifying questions.
+        pt: Define requisitos, restrições e casos de borda, e faz perguntas para esclarecer.
+      - en: Questions the problem itself, finds hidden requirements (security, scale, operations) and cuts scope on purpose.
+        pt: Questiona o próprio problema, encontra requisitos escondidos (segurança, escala, operação) e corta escopo de propósito.
+
+  - id: style
+    name: { en: Style selection, pt: Escolha de estilo }
+    question:
+      en: Does the candidate choose how to direct the model, on purpose?
+      pt: A pessoa escolhe de propósito como conduzir o modelo?
+    descriptors:
+      - en: Uses one habitual style, whatever the task.
+        pt: Usa um estilo por hábito, qualquer que seja a tarefa.
+      - en: Alternates between describing the outcome and dictating the implementation.
+        pt: Alterna entre descrever o resultado e ditar a implementação.
+      - en: Picks the style according to risk and complexity, and can explain the choice.
+        pt: Escolhe o estilo de acordo com o risco e a complexidade, e consegue explicar a escolha.
+      - en: Combines styles fluently, switches mid-task when the situation changes and can teach the trade-offs.
+        pt: Combina estilos com fluência, troca no meio da tarefa quando a situação muda e consegue ensinar os trade-offs.
+
+  - id: verification
+    name: { en: Verification, pt: Verificação }
+    question:
+      en: How does the candidate check that the output is correct?
+      pt: Como a pessoa confere se o output está correto?
+    descriptors:
+      - en: Runs it once. If it looks right, it ships.
+        pt: Roda uma vez. Se parece certo, vai.
+      - en: Reads the diff and fixes visible errors.
+        pt: Lê o diff e corrige os erros visíveis.
+      - en: Uses tests, specs or types as a contract and checks edge cases and failure modes.
+        pt: Usa testes, specs ou tipos como contrato e confere casos de borda e modos de falha.
+      - en: Designs verification upfront (tests, evals, monitoring) and catches subtle problems in security, performance and concurrency.
+        pt: Planeja a verificação desde o início (testes, evals, monitoramento) e pega problemas sutis de segurança, performance e concorrência.
+
+  - id: context
+    name: { en: Context management, pt: Gestão de contexto }
+    question:
+      en: Does the candidate give the model what it needs, and only that?
+      pt: A pessoa dá ao modelo o que ele precisa, e só isso?
+    descriptors:
+      - en: Gives no context, or dumps everything.
+        pt: Não dá contexto nenhum, ou joga tudo.
+      - en: Adds relevant files after the model fails.
+        pt: Adiciona arquivos relevantes depois que o modelo erra.
+      - en: Curates context upfront with relevant files, conventions, constraints and examples.
+        pt: Monta o contexto antes, com arquivos relevantes, convenções, restrições e exemplos.
+      - en: Makes context reusable for the team (rules files, docs, tools) and keeps it current.
+        pt: Torna o contexto reutilizável para o time (arquivos de regras, docs, ferramentas) e mantém atualizado.
+
+  - id: ownership
+    name: { en: Ownership and judgment, pt: Domínio e julgamento }
+    question:
+      en: Does the candidate own the result as if they had written every line?
+      pt: A pessoa é dona do resultado como se tivesse escrito cada linha?
+    descriptors:
+      - en: Cannot explain parts of the generated code.
+        pt: Não consegue explicar partes do código gerado.
+      - en: Explains the code and changes it when asked.
+        pt: Explica o código e altera quando pedem.
+      - en: Rejects or rewrites weak output and defends design decisions with reasons.
+        pt: Rejeita ou reescreve output fraco e defende as decisões de design com argumentos.
+      - en: Knows when not to use AI and weighs cost, security and maintainability for the team.
+        pt: Sabe quando não usar IA e pesa custo, segurança e manutenção para o time.
+
+interview:
+  title: { en: How to run the interview, pt: Como conduzir a entrevista }
+  steps:
+    - minutes: 5
+      name: { en: Brief, pt: Alinhamento }
+      description:
+        en: Share your AI policy and this rubric. Say which tools are allowed and that you evaluate the process, not only the output.
+        pt: Compartilhe sua política de IA e esta rubrica. Diga quais ferramentas são permitidas e que você avalia o processo, não só o resultado.
+    - minutes: 10
+      name: { en: Framing, pt: Enquadramento }
+      description:
+        en: Present a realistic problem from your domain, not a puzzle. Ask the candidate to restate it, ask questions and outline a plan before prompting.
+        pt: Apresente um problema realista do seu domínio, não um puzzle. Peça para a pessoa reformular, fazer perguntas e esboçar um plano antes de escrever prompts.
+    - minutes: 30
+      name: { en: Build, pt: Construção }
+      description:
+        en: The candidate builds with their usual AI tools and thinks out loud. Watch style choices, the context they provide and how they review output. Do not help with prompts.
+        pt: A pessoa constrói com as ferramentas de IA que usa no dia a dia e pensa em voz alta. Observe as escolhas de estilo, o contexto que ela fornece e como revisa o output. Não ajude com prompts.
+    - minutes: 10
+      name: { en: Change, pt: Mudança }
+      description:
+        en: Introduce a new requirement or a subtle bug. Watch how the candidate verifies and adapts.
+        pt: Introduza um requisito novo ou um bug sutil. Observe como a pessoa verifica e se adapta.
+    - minutes: 10
+      name: { en: Debrief, pt: Conversa final }
+      description:
+        en: Ask the candidate to explain the code, their choices and what they would do before production. The interview questions on each style page help here.
+        pt: Peça para a pessoa explicar o código, as escolhas e o que faria antes de ir para produção. As perguntas de entrevista de cada estilo ajudam aqui.
+  scoring:
+    en:
+      - Score each dimension from 1 to 4 with written evidence. Write down what you saw, not what you felt.
+      - Do not average blindly. Decide upfront which dimensions matter most for the role.
+      - A 1 in ownership is a strong no for production roles, whatever the other scores.
+      - Calibrate. Interviewers should score the same recorded session together at least once.
+    pt:
+      - Dê de 1 a 4 em cada dimensão, com evidência escrita. Anote o que você viu, não o que sentiu.
+      - Não tire média no automático. Decida antes quais dimensões pesam mais para a vaga.
+      - Nota 1 em domínio é um não forte para vagas de produção, quaisquer que sejam as outras notas.
+      - Calibre. Os entrevistadores devem avaliar juntos a mesma sessão gravada pelo menos uma vez.
+  green_flags:
+    en:
+      - States assumptions before prompting
+      - Rejects output that is plausible but wrong
+      - Switches style when the risk changes, and says why
+      - Writes or asks for tests before trusting the code
+    pt:
+      - Declara as suposições antes de escrever o prompt
+      - Rejeita output plausível mas errado
+      - Troca de estilo quando o risco muda, e diz por quê
+      - Escreve ou pede testes antes de confiar no código
+  red_flags:
+    en:
+      - Accepts large diffs without reading them
+      - Cannot explain the generated code
+      - Loops on "fix it" without a diagnosis
+      - Hides AI use, or uses tools that were not allowed
+    pt:
+      - Aceita diffs grandes sem ler
+      - Não consegue explicar o código gerado
+      - Fica em loop de "arruma isso" sem diagnóstico
+      - Esconde o uso de IA ou usa ferramentas que não foram permitidas
+
+prepare:
+  title: { en: How to prepare as a candidate, pt: Como se preparar como candidato }
+  items:
+    en:
+      - Pick one small feature and build it in every style of the taxonomy. Compare the results and how long each one took.
+      - Practice thinking out loud. Say which style you are choosing and why.
+      - Read every diff before you accept it. Be ready to explain any line.
+      - Write tests or acceptance criteria before you prompt, at least once a day.
+      - Keep a rules file (AGENTS.md, CLAUDE.md or similar) in a side project and maintain it.
+      - Ask the company for its AI policy and rubric before the interview. Under this manifesto, that is a fair question.
+    pt:
+      - Escolha uma feature pequena e construa em cada estilo da taxonomia. Compare os resultados e quanto tempo cada um levou.
+      - Treine pensar em voz alta. Diga qual estilo está escolhendo e por quê.
+      - Leia todo diff antes de aceitar. Esteja pronto para explicar qualquer linha.
+      - Escreva testes ou critérios de aceite antes do prompt, pelo menos uma vez por dia.
+      - Mantenha um arquivo de regras (AGENTS.md, CLAUDE.md ou parecido) num projeto pessoal.
+      - Pergunte à empresa qual é a política de IA e a rubrica antes da entrevista. Por este manifesto, é uma pergunta justa.

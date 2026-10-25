@@ -1,0 +1,66 @@
+name: "✍️ Sign the manifesto / Assinar o manifesto"
+description: "Add your name to the Prompt Styles Manifesto. / Adicione seu nome ao Manifesto Prompt Styles."
+title: "Signature"
+labels: ["signature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for signing. Your GitHub account is your proof of identity: only you can open this issue as you. A bot records your signature and closes this issue within a minute or two.
+
+        Obrigado por assinar. Sua conta do GitHub é a sua prova de identidade: só você consegue abrir esta issue como você. Um bot registra sua assinatura e fecha a issue em um ou dois minutos.
+
+        **Signatures are personal. Your company is shown for identification only and does not mean it endorses the manifesto.**
+        **A assinatura é pessoal. A empresa aparece só para identificação e não significa que ela endossa o manifesto.**
+
+  - type: input
+    id: name
+    attributes:
+      label: "Name / Nome"
+      description: "As it should appear on the site. / Como deve aparecer no site."
+      placeholder: "Ada Lovelace"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: "Role / Área"
+      options:
+        - "Engineering / Engenharia"
+        - "People, HR or recruiting / People, RH ou recrutamento"
+        - "Other / Outra"
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: "Job title / Cargo (optional)"
+      placeholder: "Staff Engineer"
+
+  - type: input
+    id: company
+    attributes:
+      label: "Company / Empresa (optional)"
+      description: "For identification only. / Só para identificação."
+
+  - type: input
+    id: location
+    attributes:
+      label: "Location / Localização (optional)"
+      placeholder: "São Paulo, Brazil"
+
+  - type: input
+    id: link
+    attributes:
+      label: "Link (optional)"
+      description: "LinkedIn or personal site, starting with https://. Your GitHub profile is used if empty. / LinkedIn ou site pessoal, começando com https://. Se ficar vazio, usamos seu perfil do GitHub."
+
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: "Agreement / Concordância"
+      options:
+        - label: "I have read the manifesto and I sign it as an individual. / Li o manifesto e assino como pessoa física."
+          required: true

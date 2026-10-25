@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=./schemas/taxonomy.schema.json
+# Metadata for the whole taxonomy. Bump `version` (semver) on every published change
+# and add an entry to CHANGELOG.md.
+version: 0.1.0
+updated: "2026-10-25"
+
+intro:
+  en: >-
+    A shared vocabulary for the ways engineers direct AI when they write software.
+    Each style has a definition, an example prompt, what it reveals about the person
+    using it, when it fits, what to watch out for, and where the term came from.
+  pt: >-
+    Um vocabulário comum para as formas como engenheiros conduzem a IA ao escrever software.
+    Cada estilo tem definição, exemplo de prompt, o que revela sobre quem usa,
+    quando faz sentido, onde estão os riscos e de onde veio o termo.
+
+note:
+  en: >-
+    Horizontal: how much the prompt dictates the implementation. Vertical: how much the
+    output is checked against an explicit contract (tests, a spec, review). Styles are a
+    spectrum, not exclusive boxes. Strong engineers combine them and switch on purpose as
+    risk and complexity change. Positions are approximate and open to debate: propose a
+    change with a pull request.
+  pt: >-
+    Horizontal: o quanto o prompt dita a implementação. Vertical: o quanto o output é
+    conferido contra um contrato explícito (testes, uma spec, revisão). Os estilos formam um
+    espectro, não caixas exclusivas. Bons engenheiros combinam vários e trocam de propósito
+    conforme o risco e a complexidade mudam. As posições são aproximadas e abertas a debate:
+    proponha mudanças com um pull request.
+
+axes:
+  how:
+    low:
+      en: Describes the outcome
+      pt: Descreve o resultado
+    high:
+      en: Dictates the implementation
+      pt: Dita a implementação
+  verification:
+    low:
+      en: Trusts the output
+      pt: Confia no output
+    high:
+      en: Verifies the output
+      pt: Verifica o output
+
+scenario:
+  title:
+    en: One feature, eight ways
+    pt: Uma feature, oito jeitos
+  description:
+    en: >-
+      Every style shows a prompt for the same feature so you can compare them side by side:
+      an image carousel for a home page that shows 5 images from the database, advances every
+      5 seconds, lazy-loads images and flashes twice when switching.
+    pt: >-
+      Todos os estilos mostram um prompt para a mesma feature, para dar para comparar lado a lado:
+      um carrossel de imagens na home que mostra 5 imagens do banco, troca a cada 5 segundos,
+      faz lazy load e pisca duas vezes ao trocar.

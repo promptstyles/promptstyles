@@ -1,0 +1,133 @@
+<!doctype html>
+<!--
+  Template for the social share images (apps/web/public/og-en.png and og-pt.png).
+  Regenerate with: npm run og   (needs Google Chrome installed)
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Fraunces';
+        src: url('../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2') format('woff2');
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: 'Fraunces';
+        font-style: italic;
+        src: url('../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-opsz-italic.woff2') format('woff2');
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: 'Inter';
+        src: url('../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: 'JetBrains Mono';
+        src: url('../../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+        font-weight: 100 900;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+      body {
+        background: #f4f1ea;
+        color: #1a1914;
+        font-family: 'Inter', sans-serif;
+        padding: 64px 72px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      .eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #6f6b61;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .eyebrow::before {
+        content: '';
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #b8390b;
+      }
+      h1 {
+        font-family: 'Fraunces', serif;
+        font-weight: 450;
+        font-size: 104px;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        align-self: center;
+        max-width: 980px;
+      }
+      h1 em {
+        font-style: italic;
+        color: #b8390b;
+      }
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 2px solid #1a1914;
+        padding-top: 24px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-family: 'Fraunces', serif;
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .brand span {
+        color: #6f6b61;
+        font-weight: 400;
+      }
+      .brand svg {
+        width: 48px;
+        height: 48px;
+      }
+      .tag {
+        font-size: 24px;
+        color: #46433b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="eyebrow" id="eyebrow">The Prompt Styles Manifesto</div>
+    <h1 id="title">The craft didn’t disappear. <em>It moved.</em></h1>
+    <div class="foot">
+      <div class="brand">
+        <svg viewBox="0 0 32 32">
+          <rect width="32" height="32" rx="8" fill="#1a1914" />
+          <path d="M8.5 8.5l4.5 3.5-4.5 3.5" fill="none" stroke="#f4f1ea" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M7.5 22.5h17" stroke="#f4f1ea" stroke-width="2.2" stroke-linecap="round" />
+          <circle cx="13" cy="22.5" r="3.6" fill="#ff7043" stroke="#1a1914" stroke-width="1.4" />
+        </svg>
+        <div>promptstyles<span>.org</span></div>
+      </div>
+      <div class="tag" id="tag">Manifesto · Taxonomy · Rubric</div>
+    </div>
+    <script>
+      if (location.hash === '#pt') {
+        document.documentElement.lang = 'pt-BR';
+        document.getElementById('eyebrow').textContent = 'Manifesto Prompt Styles';
+        document.getElementById('title').innerHTML = 'O ofício não desapareceu. <em>Ele mudou de lugar.</em>';
+        document.getElementById('tag').textContent = 'Manifesto · Taxonomia · Rubrica';
+      }
+    </script>
+  </body>
+</html>

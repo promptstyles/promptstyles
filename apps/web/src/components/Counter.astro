@@ -1,0 +1,24 @@
+---
+import { signatories } from '../lib/data';
+import { ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const latest = signatories.slice(-5).reverse();
+---
+
+<p class="counter">
+  {
+    latest.length > 0 && (
+      <span class="avatars" aria-hidden="true">
+        {latest.map((s) => (
+          <img src={`https://github.com/${s.github}.png?size=64`} alt="" width="32" height="32" loading="lazy" />
+        ))}
+      </span>
+    )
+  }
+  <strong>{ui[lang].count(signatories.length)}</strong>
+</p>
