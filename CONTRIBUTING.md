@@ -4,7 +4,7 @@ Thanks for helping. This project only works if it is shaped by the people who us
 
 ## Ways to help
 
-- **Sign the manifesto** at [promptstyles.org/sign](https://promptstyles.org/sign).
+- **Sign the manifesto** at [the signature form](https://github.com/promptstyles/promptstyles/issues/new?template=sign.yml).
 - **Propose a new style** or a change to an existing one with the [proposal form](../../issues/new?template=propose-style.yml). Discuss it there first, then open a pull request.
 - **Improve a definition, an example or a translation.** Small fixes can go straight to a pull request.
 - **Fix or add sources** in the `origin` of a style. Primary sources beat secondary ones.

@@ -39,6 +39,6 @@ const { version, styles, rubric } = loadTaxonomy();
 console.log(version, styles.map((s) => s.name.en));
 ```
 
-The published site also serves everything as JSON at `https://promptstyles.org/taxonomy.json`.
+The published site also serves everything as JSON at `https://promptstyles.github.io/promptstyles/taxonomy.json`.
 
 Licensed under [CC BY 4.0](../LICENSE-CONTENT.md).
