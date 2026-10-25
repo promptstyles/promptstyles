@@ -8,6 +8,13 @@ updates:
     groups:
       npm:
         patterns: ['*']
+    ignore:
+      # astro check supports TypeScript up to 6. Bump by hand when it supports a newer major.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      # Types must match the Node.js major in .nvmrc.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     open-pull-requests-limit: 3
 
   - package-ecosystem: github-actions
