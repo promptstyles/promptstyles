@@ -30,7 +30,6 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_REPO: ${{ github.repository }}
       NUMBER: ${{ github.event.issue.number }}
-      COMMENT_FILE: ${{ runner.temp }}/comment.md
     steps:
       - uses: actions/checkout@v7
 
@@ -43,6 +42,7 @@ jobs:
         run: node scripts/sign.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_FILE: ${{ runner.temp }}/comment.md
 
       - name: Commit the signature
         if: steps.sign.outputs.status == 'signed' || steps.sign.outputs.status == 'updated'
@@ -69,6 +69,7 @@ jobs:
         if: steps.sign.outputs.status != ''
         env:
           STATUS: ${{ steps.sign.outputs.status }}
+          COMMENT_FILE: ${{ runner.temp }}/comment.md
         run: |
           gh issue comment "$NUMBER" --body-file "$COMMENT_FILE"
           case "$STATUS" in
