@@ -121,4 +121,4 @@ if (errors.length) {
   console.error('');
   process.exit(1);
 }
-console.log(`✓ taxonomy v${meta.version}: ${styles.length} styles, rubric with ${rubric.dimensions.length} dimensions, ${signatories} signatories`);
+console.log(`✓ taxonomy v${meta.version}: ${styles.length} styles, rubric with ${rubric.dimensions.length} dimensions, ${signatories} ${signatories === 1 ? 'signatory' : 'signatories'}`);
