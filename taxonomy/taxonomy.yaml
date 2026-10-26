@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=./schemas/taxonomy.schema.json
 # Metadata for the whole taxonomy. Bump `version` (semver) on every published change
 # and add an entry to CHANGELOG.md.
-version: 0.1.0
-updated: "2026-10-25"
+version: 0.2.0
+updated: "2026-10-26"
 
 intro:
   en: >-

@@ -1,41 +1,127 @@
 # yaml-language-server: $schema=./schemas/rubric.schema.json
 # Evaluation rubric for AI-assisted engineering interviews.
-# Score each dimension from 1 to 4, with written evidence.
+# It gives two readings: the level (how well the person works with AI)
+# and the focus (whether they lean toward business or toward tech).
 
 intro:
   en: >-
-    A rubric for interviews where candidates build with AI. It scores the process, not just
-    the code: how the problem is framed, how the model is directed, how the output is checked
-    and who really owns the result. Share it with candidates before the interview.
+    A rubric for interviews where candidates build with AI. It gives two readings: the level,
+    how well the person works with AI, and the focus, whether they lean toward the business
+    or toward the technology. It scores the process, not just the code. Share it with
+    candidates before the interview.
   pt: >-
-    Uma rubrica para entrevistas em que o candidato constrói com IA. Ela avalia o processo,
-    não só o código: como o problema é enquadrado, como o modelo é conduzido, como o output é
-    verificado e quem de fato é dono do resultado. Compartilhe com o candidato antes da entrevista.
+    Uma rubrica para entrevistas em que o candidato constrói com IA. Ela dá duas leituras:
+    o nível, o quão bem a pessoa trabalha com IA, e o foco, se ela pende para o negócio ou
+    para a técnica. Ela avalia o processo, não só o código. Compartilhe com o candidato antes
+    da entrevista.
+
+result_example:
+  en: AI-Native · Product Engineer
+  pt: AI-Native · Product Engineer
 
 levels:
   - level: 1
-    name: { en: Operator, pt: Operador }
+    name: { en: AI User, pt: AI User }
+    aka: [Vibe coder, Prompter]
     summary:
-      en: Uses a single style and accepts the output without real review.
-      pt: Usa um único estilo e aceita o output sem revisar de verdade.
+      en: Uses AI in one habitual way and accepts the output without real review.
+      pt: Usa IA de um jeito só, por hábito, e aceita o output sem revisar de verdade.
   - level: 2
-    name: { en: Practitioner, pt: Praticante }
+    name: { en: AI-Assisted, pt: AI-Assisted }
+    aka: [AI pair programmer, Prompt engineer]
     summary:
       en: Switches between describing and dictating, reviews the code and fixes errors.
       pt: Alterna entre descrever e ditar, revisa o código e corrige os erros.
   - level: 3
-    name: { en: Engineer, pt: Engenheiro }
+    name: { en: AI-Native, pt: AI-Native }
+    aka: [Agentic engineer, Augmented engineer, Context engineer]
     summary:
-      en: Chooses the style by risk and complexity, uses tests and specs as contracts, manages context.
-      pt: Escolhe o estilo pelo risco e pela complexidade, usa testes e specs como contrato, gerencia o contexto.
+      en: Chooses the style by risk and complexity, uses tests and specs as contracts and manages context.
+      pt: Escolhe o estilo pelo risco e pela complexidade, usa testes e specs como contrato e gerencia o contexto.
+    sources:
+      - title: "Kent Beck: Augmented Coding: Beyond the Vibes (2025-06-25)"
+        url: https://newsletter.kentbeck.com/p/augmented-coding-beyond-the-vibes
+      - title: "Simon Willison: Agentic Engineering Patterns"
+        url: https://simonwillison.net/guides/agentic-engineering-patterns/
   - level: 4
-    name: { en: Architect, pt: Arquiteto }
+    name: { en: AI Leader, pt: AI Leader }
+    aka: [AI engineering lead, Agent orchestrator, Staff engineer]
     summary:
-      en: Sets standards for the team, knows when not to use AI, weighs cost, security and maintenance.
-      pt: Define padrões para o time, sabe quando não usar IA, pesa custo, segurança e manutenção.
+      en: Sets how the team works with AI, knows when not to use it and weighs cost, security and maintenance.
+      pt: Define como o time trabalha com IA, sabe quando não usar e pesa custo, segurança e manutenção.
+
+focus:
+  title: { en: "Focus: business ↔ tech", pt: "Foco: negócio ↔ técnica" }
+  description:
+    en: >-
+      The level says how well someone works with AI. The focus says which way they lean: toward
+      the business problem or toward the technology. No position is better than another. The
+      right one depends on the role.
+    pt: >-
+      O nível diz o quão bem a pessoa trabalha com IA. O foco diz para que lado ela pende: para o
+      problema de negócio ou para a tecnologia. Nenhuma posição é melhor que outra. A certa
+      depende da vaga.
+  axis:
+    low: { en: Business, pt: Negócio }
+    high: { en: Tech, pt: Técnica }
+  positions:
+    - id: business-operator
+      from: 0
+      to: 20
+      name: { en: Business Operator, pt: Business Operator }
+      aka: [Founder, Product manager, Operations lead]
+      summary:
+        en: Runs the business with AI. Uses it to automate, analyze and decide. Code is rarely the goal.
+        pt: Toca o negócio com IA. Usa para automatizar, analisar e decidir. Código raramente é o objetivo.
+    - id: business-builder
+      from: 20
+      to: 40
+      name: { en: Business Builder, pt: Business Builder }
+      aka: [Founder-builder, PM who codes, Indie hacker]
+      summary:
+        en: Builds products to test business ideas. Ships prototypes and internal tools, with product sense ahead of technical depth.
+        pt: Constrói produtos para testar ideias de negócio. Entrega protótipos e ferramentas internas, com visão de produto à frente da profundidade técnica.
+    - id: product-engineer
+      from: 40
+      to: 60
+      name: { en: Product Engineer, pt: Product Engineer }
+      aka: [Product-minded engineer, Full-stack engineer, Founding engineer]
+      summary:
+        en: Balances product and tech. Owns features end to end and ties every technical decision to users and business results.
+        pt: Equilibra produto e técnica. É dono de features de ponta a ponta e liga cada decisão técnica aos usuários e ao resultado do negócio.
+      sources:
+        - title: "Gergely Orosz: The Product-Minded Software Engineer (2019-09-05)"
+          url: https://blog.pragmaticengineer.com/the-product-minded-engineer/
+    - id: software-engineer
+      from: 60
+      to: 80
+      name: { en: Software Engineer, pt: Software Engineer }
+      aka: [Backend engineer, Platform engineer, Software developer]
+      summary:
+        en: Leans toward tech. Cares most about code quality, architecture and scale, with the product as context.
+        pt: Pende para a técnica. Se importa mais com qualidade de código, arquitetura e escala, com o produto como contexto.
+    - id: architect
+      from: 80
+      to: 100
+      name: { en: Architect, pt: Architect }
+      aka: [Systems engineer, Infrastructure engineer, Principal engineer]
+      summary:
+        en: Deepest technical focus. Designs systems, infrastructure and platforms. The product is an input, not the daily work.
+        pt: Foco técnico mais profundo. Desenha sistemas, infraestrutura e plataformas. O produto é um insumo, não o trabalho do dia a dia.
+
+scoring:
+  en:
+    - Score every dimension from 1 to 4.
+    - "Level: the average of all dimensions, rounded to the nearest level. Exact halves round down."
+    - "Focus: the average of the tech dimensions minus the average of the business dimensions. The bigger the gap, the further the person sits toward that end of the axis."
+  pt:
+    - Dê de 1 a 4 em cada dimensão.
+    - "Nível: a média de todas as dimensões, arredondada para o nível mais próximo. Meios arredondam para baixo."
+    - "Foco: a média das dimensões técnicas menos a média das dimensões de negócio. Quanto maior a diferença, mais perto daquela ponta do eixo a pessoa fica."
 
 dimensions:
   - id: framing
+    side: business
     name: { en: Problem framing, pt: Enquadramento do problema }
     question:
       en: Does the candidate understand and specify the problem before generating code?
@@ -50,7 +136,24 @@ dimensions:
       - en: Questions the problem itself, finds hidden requirements (security, scale, operations) and cuts scope on purpose.
         pt: Questiona o próprio problema, encontra requisitos escondidos (segurança, escala, operação) e corta escopo de propósito.
 
+  - id: product
+    side: business
+    name: { en: Product and business judgment, pt: Visão de produto e negócio }
+    question:
+      en: Does the candidate connect technical choices to users and business results?
+      pt: A pessoa liga as escolhas técnicas aos usuários e ao resultado do negócio?
+    descriptors:
+      - en: Builds what was asked, with no thought about who uses it or why.
+        pt: Constrói o que foi pedido, sem pensar em quem usa nem por quê.
+      - en: Asks about the user and the goal when someone brings it up.
+        pt: Pergunta sobre o usuário e o objetivo quando alguém puxa o assunto.
+      - en: Weighs scope against value, proposes simpler options and says how success will be measured.
+        pt: Pesa escopo contra valor, propõe alternativas mais simples e diz como o sucesso vai ser medido.
+      - en: Shapes the problem with the business. Questions the goal, prioritizes by impact and turns trade-offs into decisions others can follow.
+        pt: Molda o problema junto com o negócio. Questiona o objetivo, prioriza por impacto e transforma trade-offs em decisões que os outros conseguem seguir.
+
   - id: style
+    side: both
     name: { en: Style selection, pt: Escolha de estilo }
     question:
       en: Does the candidate choose how to direct the model, on purpose?
@@ -66,6 +169,7 @@ dimensions:
         pt: Combina estilos com fluência, troca no meio da tarefa quando a situação muda e consegue ensinar os trade-offs.
 
   - id: verification
+    side: tech
     name: { en: Verification, pt: Verificação }
     question:
       en: How does the candidate check that the output is correct?
@@ -81,6 +185,7 @@ dimensions:
         pt: Planeja a verificação desde o início (testes, evals, monitoramento) e pega problemas sutis de segurança, performance e concorrência.
 
   - id: context
+    side: tech
     name: { en: Context management, pt: Gestão de contexto }
     question:
       en: Does the candidate give the model what it needs, and only that?
@@ -96,10 +201,11 @@ dimensions:
         pt: Torna o contexto reutilizável para o time (arquivos de regras, docs, ferramentas) e mantém atualizado.
 
   - id: ownership
-    name: { en: Ownership and judgment, pt: Domínio e julgamento }
+    side: tech
+    name: { en: Technical ownership, pt: Domínio técnico }
     question:
-      en: Does the candidate own the result as if they had written every line?
-      pt: A pessoa é dona do resultado como se tivesse escrito cada linha?
+      en: Does the candidate own the code as if they had written every line?
+      pt: A pessoa é dona do código como se tivesse escrito cada linha?
     descriptors:
       - en: Cannot explain parts of the generated code.
         pt: Não consegue explicar partes do código gerado.
@@ -116,13 +222,13 @@ interview:
     - minutes: 5
       name: { en: Brief, pt: Alinhamento }
       description:
-        en: Share your AI policy and this rubric. Say which tools are allowed and that you evaluate the process, not only the output.
-        pt: Compartilhe sua política de IA e esta rubrica. Diga quais ferramentas são permitidas e que você avalia o processo, não só o resultado.
+        en: Share your AI policy and this rubric. Say which tools are allowed, that you evaluate the process and not only the output, and which focus the role needs.
+        pt: Compartilhe sua política de IA e esta rubrica. Diga quais ferramentas são permitidas, que você avalia o processo e não só o resultado, e qual foco a vaga precisa.
     - minutes: 10
       name: { en: Framing, pt: Enquadramento }
       description:
-        en: Present a realistic problem from your domain, not a puzzle. Ask the candidate to restate it, ask questions and outline a plan before prompting.
-        pt: Apresente um problema realista do seu domínio, não um puzzle. Peça para a pessoa reformular, fazer perguntas e esboçar um plano antes de escrever prompts.
+        en: Present a realistic problem from your domain, not a puzzle, including who the users are and what success means. Ask the candidate to restate it, ask questions and outline a plan before prompting.
+        pt: Apresente um problema realista do seu domínio, não um puzzle, incluindo quem são os usuários e o que é sucesso. Peça para a pessoa reformular, fazer perguntas e esboçar um plano antes de escrever prompts.
     - minutes: 30
       name: { en: Build, pt: Construção }
       description:
@@ -131,8 +237,8 @@ interview:
     - minutes: 10
       name: { en: Change, pt: Mudança }
       description:
-        en: Introduce a new requirement or a subtle bug. Watch how the candidate verifies and adapts.
-        pt: Introduza um requisito novo ou um bug sutil. Observe como a pessoa verifica e se adapta.
+        en: Introduce a new requirement or a subtle bug. Watch how the candidate verifies and adapts, and whether they ask why the change matters.
+        pt: Introduza um requisito novo ou um bug sutil. Observe como a pessoa verifica e se adapta, e se ela pergunta por que a mudança importa.
     - minutes: 10
       name: { en: Debrief, pt: Conversa final }
       description:
@@ -141,22 +247,26 @@ interview:
   scoring:
     en:
       - Score each dimension from 1 to 4 with written evidence. Write down what you saw, not what you felt.
-      - Do not average blindly. Decide upfront which dimensions matter most for the role.
-      - A 1 in ownership is a strong no for production roles, whatever the other scores.
+      - Report the result as level and focus, for example AI-Native · Product Engineer.
+      - No focus is better than another. Decide upfront which focus the role needs and compare against that.
+      - A 1 in technical ownership is a strong no for production roles, whatever the other scores.
       - Calibrate. Interviewers should score the same recorded session together at least once.
     pt:
       - Dê de 1 a 4 em cada dimensão, com evidência escrita. Anote o que você viu, não o que sentiu.
-      - Não tire média no automático. Decida antes quais dimensões pesam mais para a vaga.
-      - Nota 1 em domínio é um não forte para vagas de produção, quaisquer que sejam as outras notas.
+      - Informe o resultado como nível e foco, por exemplo AI-Native · Product Engineer.
+      - Nenhum foco é melhor que outro. Decida antes qual foco a vaga precisa e compare com isso.
+      - Nota 1 em domínio técnico é um não forte para vagas de produção, quaisquer que sejam as outras notas.
       - Calibre. Os entrevistadores devem avaliar juntos a mesma sessão gravada pelo menos uma vez.
   green_flags:
     en:
       - States assumptions before prompting
+      - Asks who the users are and what success looks like
       - Rejects output that is plausible but wrong
       - Switches style when the risk changes, and says why
       - Writes or asks for tests before trusting the code
     pt:
       - Declara as suposições antes de escrever o prompt
+      - Pergunta quem são os usuários e o que é sucesso
       - Rejeita output plausível mas errado
       - Troca de estilo quando o risco muda, e diz por quê
       - Escreve ou pede testes antes de confiar no código
@@ -181,11 +291,13 @@ prepare:
       - Read every diff before you accept it. Be ready to explain any line.
       - Write tests or acceptance criteria before you prompt, at least once a day.
       - Keep a rules file (AGENTS.md, CLAUDE.md or similar) in a side project and maintain it.
-      - Ask the company for its AI policy and rubric before the interview. Under this manifesto, that is a fair question.
+      - Know which way you lean on the business ↔ tech axis. Say it in the interview, and show that the other side is not zero.
+      - Ask the company for its AI policy, its rubric and the focus the role needs before the interview. Under this manifesto, that is a fair question.
     pt:
       - Escolha uma feature pequena e construa em cada estilo da taxonomia. Compare os resultados e quanto tempo cada um levou.
       - Treine pensar em voz alta. Diga qual estilo está escolhendo e por quê.
       - Leia todo diff antes de aceitar. Esteja pronto para explicar qualquer linha.
       - Escreva testes ou critérios de aceite antes do prompt, pelo menos uma vez por dia.
       - Mantenha um arquivo de regras (AGENTS.md, CLAUDE.md ou parecido) num projeto pessoal.
-      - Pergunte à empresa qual é a política de IA e a rubrica antes da entrevista. Por este manifesto, é uma pergunta justa.
+      - Saiba para que lado você pende no eixo negócio ↔ técnica. Diga isso na entrevista e mostre que o outro lado não é zero.
+      - Pergunte à empresa qual é a política de IA, a rubrica e o foco que a vaga precisa antes da entrevista. Por este manifesto, é uma pergunta justa.

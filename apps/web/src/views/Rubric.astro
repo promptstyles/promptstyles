@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
+import Calculator from '../components/Calculator.astro';
+import FocusAxis from '../components/FocusAxis.astro';
 import { editUrl } from '../lib/config';
-import { interviewMinutes, rubric } from '../lib/data';
+import { interviewMinutes, rubric, taxonomy } from '../lib/data';
 import { l, ui, type Lang } from '../lib/i18n';
 import { asset } from '../lib/url';
 
@@ -10,22 +12,41 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-const t = ui[lang];
-const { interview, prepare } = rubric;
+const t = ui[lang].rubric;
+const { interview, prepare, focus } = rubric;
 const longest = Math.max(...interview.steps.map((s) => s.minutes));
+const h2 = 'font-size: clamp(1.8rem, 3.6vw, 2.6rem)';
 ---
 
-<Base lang={lang} path="/rubric/" nav="rubric" title={t.rubric.title} description={l(rubric.intro, lang)}>
+<Base lang={lang} path="/rubric/" nav="rubric" title={t.title} description={l(rubric.intro, lang)}>
   <div class="container">
     <header class="page-head">
-      <span class="eyebrow">{t.nav.rubric}</span>
-      <h1>{t.rubric.title}</h1>
+      <span class="eyebrow">{ui[lang].nav.rubric} · v{taxonomy.version}</span>
+      <h1>{t.title}</h1>
       <p class="lead">{l(rubric.intro, lang)}</p>
     </header>
 
     <div class="stack-lg" style="padding-bottom: clamp(64px, 9vw, 112px)">
+      <section class="stack" aria-labelledby="readings-title">
+        <h2 id="readings-title" class="eyebrow">{t.readings}</h2>
+        <div class="readings">
+          <div>
+            <h3>{t.levelTitle}</h3>
+            <p>{t.levelBody}</p>
+          </div>
+          <div>
+            <h3>{t.focusTitle}</h3>
+            <p>{t.focusBody}</p>
+          </div>
+          <div class="readings-result">
+            <span class="eyebrow">{t.resultLabel}</span>
+            <p>{l(rubric.result_example, lang)}</p>
+          </div>
+        </div>
+      </section>
+
       <section class="stack" aria-labelledby="levels-title">
-        <h2 id="levels-title" class="eyebrow">{t.rubric.levels}</h2>
+        <h2 id="levels-title" class="eyebrow">{t.levelTitle} · {t.levels}</h2>
         <ol class="levels">
           {
             rubric.levels.map((lv) => (
@@ -33,18 +54,76 @@ const longest = Math.max(...interview.steps.map((s) => s.minutes));
                 <span class="lvl">{lv.level}</span>
                 <h3>{l(lv.name, lang)}</h3>
                 <p>{l(lv.summary, lang)}</p>
+                {lv.aka && (
+                  <p class="aka">
+                    <span>{t.aka}:</span> {lv.aka.join(', ')}
+                  </p>
+                )}
+                {lv.sources && (
+                  <p class="aka">
+                    <span>{t.sources}:</span>{' '}
+                    {lv.sources.map((s) => (
+                      <a href={s.url} rel="noopener">
+                        {s.title.split(':')[0]}
+                      </a>
+                    ))}
+                  </p>
+                )}
               </li>
             ))
           }
         </ol>
       </section>
 
+      <section class="stack" aria-labelledby="focus-title">
+        <h2 id="focus-title" style={h2}>{l(focus.title, lang)}</h2>
+        <p class="lead" style="max-width: 62ch">{l(focus.description, lang)}</p>
+        <FocusAxis lang={lang} />
+        <ol class="positions">
+          {
+            focus.positions.map((p) => (
+              <li>
+                <h3>{l(p.name, lang)}</h3>
+                <p>{l(p.summary, lang)}</p>
+                {p.aka && (
+                  <p class="aka">
+                    <span>{t.aka}:</span> {p.aka.join(', ')}
+                  </p>
+                )}
+                {p.sources && (
+                  <p class="aka">
+                    <span>{t.sources}:</span>{' '}
+                    {p.sources.map((s) => (
+                      <a href={s.url} rel="noopener">
+                        {s.title.split(':')[0]}
+                      </a>
+                    ))}
+                  </p>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="stack" aria-labelledby="calc-title" id="calculator">
+        <div class="row-between">
+          <h2 id="calc-title" style={h2}>{t.calcTitle}</h2>
+        </div>
+        <p class="muted" style="max-width: 62ch">{t.calcLead}</p>
+        <Calculator lang={lang} />
+        <details class="how">
+          <summary>{t.howCalculated}</summary>
+          <ul class="bullets">{l(rubric.scoring, lang).map((x) => <li>{x}</li>)}</ul>
+        </details>
+      </section>
+
       <section class="stack" aria-labelledby="matrix-title">
-        <h2 id="matrix-title" class="eyebrow">{t.rubric.matrix}</h2>
+        <h2 id="matrix-title" class="eyebrow">{t.matrix}</h2>
         <table class="matrix">
           <thead>
             <tr>
-              <th scope="col">{t.rubric.dimension}</th>
+              <th scope="col">{t.dimension}</th>
               {rubric.levels.map((lv) => <th scope="col">{lv.level} · {l(lv.name, lang)}</th>)}
             </tr>
           </thead>
@@ -54,6 +133,7 @@ const longest = Math.max(...interview.steps.map((s) => s.minutes));
                 <tr>
                   <th scope="row">
                     <strong>{l(d.name, lang)}</strong>
+                    <span class={`badge side side-${d.side}`}>{t.sides[d.side]}</span>
                     <span>{l(d.question, lang)}</span>
                   </th>
                   {d.descriptors.map((desc, i) => (
@@ -68,8 +148,8 @@ const longest = Math.max(...interview.steps.map((s) => s.minutes));
 
       <section class="stack" aria-labelledby="interview-title">
         <div class="row-between">
-          <h2 id="interview-title" style="font-size: clamp(1.8rem, 3.6vw, 2.6rem)">{l(interview.title, lang)}</h2>
-          <span class="badge">{t.rubric.total(interviewMinutes)}</span>
+          <h2 id="interview-title" style={h2}>{l(interview.title, lang)}</h2>
+          <span class="badge">{t.total(interviewMinutes)}</span>
         </div>
         <div class="timeline" aria-hidden="true">
           {
@@ -85,7 +165,7 @@ const longest = Math.max(...interview.steps.map((s) => s.minutes));
             interview.steps.map((s) => (
               <li>
                 <h3>
-                  {l(s.name, lang)} <small>{s.minutes} {t.rubric.minutes}</small>
+                  {l(s.name, lang)} <small>{s.minutes} {t.minutes}</small>
                 </h3>
                 <p>{l(s.description, lang)}</p>
               </li>
@@ -94,28 +174,28 @@ const longest = Math.max(...interview.steps.map((s) => s.minutes));
         </ol>
       </section>
 
-      <section class="flags" aria-label={t.rubric.scoring}>
+      <section class="flags" aria-label={t.scoring}>
         <div>
-          <h3>{t.rubric.scoring}</h3>
+          <h3>{t.scoring}</h3>
           <ul class="bullets">{l(interview.scoring, lang).map((x) => <li>{x}</li>)}</ul>
         </div>
         <div>
-          <h3>{t.rubric.green}</h3>
+          <h3>{t.green}</h3>
           <ul class="bullets">{l(interview.green_flags, lang).map((x) => <li>{x}</li>)}</ul>
         </div>
         <div class="red">
-          <h3>{t.rubric.red}</h3>
+          <h3>{t.red}</h3>
           <ul class="bullets">{l(interview.red_flags, lang).map((x) => <li>{x}</li>)}</ul>
         </div>
       </section>
 
       <section class="stack" aria-labelledby="prepare-title">
-        <h2 id="prepare-title" style="font-size: clamp(1.8rem, 3.6vw, 2.6rem)">{l(prepare.title, lang)}</h2>
+        <h2 id="prepare-title" style={h2}>{l(prepare.title, lang)}</h2>
         <ol class="prepare">{l(prepare.items, lang).map((x) => <li>{x}</li>)}</ol>
       </section>
 
       <p class="muted" style="font-size: 0.9375rem">
-        <a href={editUrl('taxonomy/rubric.yaml')}>{t.rubric.edit}</a> · <a href={asset('/taxonomy.json')}>taxonomy.json</a>
+        <a href={editUrl('taxonomy/rubric.yaml')}>{t.edit}</a> · <a href={asset('/taxonomy.json')}>taxonomy.json</a>
       </p>
     </div>
   </div>

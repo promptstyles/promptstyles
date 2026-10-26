@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
 import SignButton from '../components/SignButton.astro';
 import StyleMap from '../components/StyleMap.astro';
+import FocusAxis from '../components/FocusAxis.astro';
 import { interviewMinutes, loadManifesto, rubric, styles, taxonomy } from '../lib/data';
 import { l, ui, type Lang } from '../lib/i18n';
 import { href } from '../lib/url';
@@ -96,17 +97,20 @@ const m = loadManifesto(lang);
         <p class="lead">{t.home.rubricBody(rubric.levels.length, rubric.dimensions.length, interviewMinutes)}</p>
         <a class="link-arrow" href={href(lang, '/rubric/')}>{t.cta.rubric}</a>
       </div>
-      <ol class="levels">
-        {
-          rubric.levels.map((lv) => (
-            <li>
-              <span class="lvl">{lv.level}</span>
-              <h3>{l(lv.name, lang)}</h3>
-              <p>{l(lv.summary, lang)}</p>
-            </li>
-          ))
-        }
-      </ol>
+      <div class="stack" style="gap: 28px">
+        <ol class="levels">
+          {
+            rubric.levels.map((lv) => (
+              <li>
+                <span class="lvl">{lv.level}</span>
+                <h3>{l(lv.name, lang)}</h3>
+                <p>{l(lv.summary, lang)}</p>
+              </li>
+            ))
+          }
+        </ol>
+        <FocusAxis lang={lang} current="product-engineer" />
+      </div>
     </div>
   </section>
 

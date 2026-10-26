@@ -2,11 +2,13 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://promptstyles.org/schemas/rubric.schema.json",
   "title": "Evaluation rubric",
+  "description": "Two readings: the level (how well someone works with AI) and the focus (business vs tech).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["intro", "levels", "dimensions", "interview", "prepare"],
+  "required": ["intro", "result_example", "levels", "focus", "scoring", "dimensions", "interview", "prepare"],
   "properties": {
     "intro": { "$ref": "common.schema.json#/definitions/text" },
+    "result_example": { "$ref": "common.schema.json#/definitions/text" },
     "levels": {
       "type": "array",
       "minItems": 2,
@@ -17,19 +19,63 @@
         "properties": {
           "level": { "type": "integer", "minimum": 1 },
           "name": { "$ref": "common.schema.json#/definitions/text" },
-          "summary": { "$ref": "common.schema.json#/definitions/text" }
+          "aka": { "$ref": "#/definitions/aka" },
+          "summary": { "$ref": "common.schema.json#/definitions/text" },
+          "sources": { "$ref": "#/definitions/sources" }
         }
       }
     },
+    "focus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "description", "axis", "positions"],
+      "properties": {
+        "title": { "$ref": "common.schema.json#/definitions/text" },
+        "description": { "$ref": "common.schema.json#/definitions/text" },
+        "axis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["low", "high"],
+          "properties": {
+            "low": { "$ref": "common.schema.json#/definitions/text" },
+            "high": { "$ref": "common.schema.json#/definitions/text" }
+          }
+        },
+        "positions": {
+          "description": "Bands on a 0-100 axis (0 = business, 100 = tech), in order, without gaps.",
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "from", "to", "name", "summary"],
+            "properties": {
+              "id": { "$ref": "common.schema.json#/definitions/slug" },
+              "from": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "to": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "name": { "$ref": "common.schema.json#/definitions/text" },
+              "aka": { "$ref": "#/definitions/aka" },
+              "summary": { "$ref": "common.schema.json#/definitions/text" },
+              "sources": { "$ref": "#/definitions/sources" }
+            }
+          }
+        }
+      }
+    },
+    "scoring": { "$ref": "common.schema.json#/definitions/list" },
     "dimensions": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "name", "question", "descriptors"],
+        "required": ["id", "side", "name", "question", "descriptors"],
         "properties": {
           "id": { "$ref": "common.schema.json#/definitions/slug" },
+          "side": {
+            "description": "Which side of the focus axis this dimension measures. 'both' counts for the level only.",
+            "enum": ["business", "tech", "both"]
+          },
           "name": { "$ref": "common.schema.json#/definitions/text" },
           "question": { "$ref": "common.schema.json#/definitions/text" },
           "descriptors": {
@@ -72,6 +118,26 @@
       "properties": {
         "title": { "$ref": "common.schema.json#/definitions/text" },
         "items": { "$ref": "common.schema.json#/definitions/list" }
+      }
+    }
+  },
+  "definitions": {
+    "aka": {
+      "description": "Other names people use.",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "url"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "url": { "$ref": "common.schema.json#/definitions/httpsUrl" }
+        }
       }
     }
   }

@@ -14,7 +14,7 @@ AI changed how software gets written, and technical interviews did not keep up. 
 
 - **The manifesto**: six short principles that engineers and people who hire engineers can sign.
 - **The taxonomy**: eight prompt styles (declarative, imperative, vibe coding, spec-driven, test-driven, example-based, iterative, context engineering), each with a definition, an example prompt, what it reveals about the person using it, interview questions and the origin of the term with sources.
-- **The rubric**: four levels, five dimensions and a 65-minute interview script, plus a preparation guide for candidates.
+- **The rubric**: two readings for every candidate, the level (AI User, AI-Assisted, AI-Native, AI Leader) and the focus on a business ↔ tech axis (Business Operator, Business Builder, Product Engineer, Software Engineer, Architect). Six dimensions, a 65-minute interview script, a scoring calculator and a preparation guide for candidates.
 
 ## What is in this repo
 

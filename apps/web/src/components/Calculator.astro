@@ -1,0 +1,116 @@
+---
+// Interactive scorecard: the interviewer picks 1-4 per dimension and gets the level and the focus.
+// The math lives in @promptstyles/taxonomy/score so the site and any other tool agree.
+import FocusAxis from './FocusAxis.astro';
+import { rubric } from '../lib/data';
+import { l, ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang].rubric;
+const scores = rubric.levels.map((lv) => lv.level);
+
+// Only what the browser needs, already in the page language.
+const data = {
+  dimensions: rubric.dimensions.map((d) => ({ id: d.id, side: d.side })),
+  levels: rubric.levels.map((lv) => ({ level: lv.level, name: l(lv.name, lang) })),
+  focus: {
+    positions: rubric.focus.positions.map((p) => ({
+      id: p.id,
+      from: p.from,
+      to: p.to,
+      name: l(p.name, lang),
+      summary: l(p.summary, lang),
+    })),
+  },
+};
+---
+
+<div class="calc" data-calc>
+  <script type="application/json" data-calc-data set:html={JSON.stringify(data)} is:inline></script>
+
+  <form class="calc-form" data-calc-form>
+    {
+      rubric.dimensions.map((d) => (
+        <fieldset class="calc-row">
+          <legend>
+            <span class="calc-dim">{l(d.name, lang)}</span>
+            <span class={`badge side side-${d.side}`}>{t.sides[d.side]}</span>
+          </legend>
+          <div class="calc-scores">
+            {scores.map((n, i) => (
+              <label title={l(d.descriptors[i], lang)}>
+                <input type="radio" name={d.id} value={n} />
+                <span>{n}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ))
+    }
+    <button class="btn btn-secondary calc-reset" type="reset">{t.calcReset}</button>
+  </form>
+
+  <div class="calc-result" aria-live="polite">
+    <p class="calc-empty" data-calc-empty>{t.calcEmpty}</p>
+    <div class="calc-out" data-calc-out hidden>
+      <span class="eyebrow">{t.resultTitle}</span>
+      <p class="calc-headline">
+        <strong data-calc-level></strong> · <strong data-calc-focus></strong>
+      </p>
+      <p class="calc-summary" data-calc-summary></p>
+      <FocusAxis lang={lang} marker />
+      <dl class="calc-stats">
+        <div><dt>{t.average}</dt><dd data-calc-average></dd></div>
+        <div><dt>{t.businessSide}</dt><dd data-calc-business></dd></div>
+        <div><dt>{t.techSide}</dt><dd data-calc-tech></dd></div>
+      </dl>
+      <p class="calc-warning" data-calc-warning hidden>{t.ownershipWarning}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { scoreSession } from '@promptstyles/taxonomy/score';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-calc]')) {
+    const data = JSON.parse(root.querySelector('[data-calc-data]')!.textContent || '{}');
+    const form = root.querySelector<HTMLFormElement>('[data-calc-form]')!;
+    const $ = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
+    const fmt = (n: number) => n.toFixed(1);
+
+    const update = () => {
+      const scores: Record<string, number> = {};
+      for (const d of data.dimensions) {
+        const checked = form.querySelector<HTMLInputElement>(`input[name="${d.id}"]:checked`);
+        if (checked) scores[d.id] = Number(checked.value);
+      }
+      const result = scoreSession(data, scores);
+      $('[data-calc-empty]').hidden = !!result;
+      $('[data-calc-out]').hidden = !result;
+      if (!result) return;
+
+      $('[data-calc-level]').textContent = result.level.name as unknown as string;
+      $('[data-calc-focus]').textContent = result.focus.name as unknown as string;
+      $('[data-calc-summary]').textContent = result.focus.summary as unknown as string;
+      $('[data-calc-average]').textContent = fmt(result.average);
+      $('[data-calc-business]').textContent = fmt(result.business);
+      $('[data-calc-tech]').textContent = fmt(result.tech);
+      $('[data-calc-warning]').hidden = scores.ownership !== 1;
+
+      const marker = $('[data-focus-marker]');
+      marker.hidden = false;
+      marker.style.left = `${result.position}%`;
+      for (const li of root.querySelectorAll<HTMLElement>('[data-focus-id]')) {
+        li.classList.toggle('current', li.dataset.focusId === result.focus.id);
+      }
+    };
+
+    form.addEventListener('change', update);
+    form.addEventListener('reset', () => setTimeout(update));
+    update();
+  }
+</script>

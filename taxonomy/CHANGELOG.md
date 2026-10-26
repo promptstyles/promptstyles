@@ -2,6 +2,17 @@
 
 All published changes to the taxonomy and the rubric. The version lives in `taxonomy.yaml`.
 
+## 0.2.0 (2026-10-26)
+
+The rubric now gives two readings: the level and the focus. Prompted by early feedback that it measured technical skill but not how business-minded a person is.
+
+- **Levels renamed** to describe maturity with AI, not roles: AI User, AI-Assisted, AI-Native and AI Leader (were Operator, Practitioner, Engineer and Architect). Each level lists other names people use.
+- **New focus axis** from business to tech, with five positions: Business Operator, Business Builder, Product Engineer (the balanced middle), Software Engineer and Architect. No position ranks above another.
+- **New dimension**: product and business judgment. Every dimension now belongs to a side (business, tech or both), and the focus comes from the gap between the two sides.
+- "Ownership and judgment" is now "Technical ownership".
+- Scoring rules for level and focus, shared by the site calculator through `@promptstyles/taxonomy/score`.
+- Interview script, scoring guidance and the preparation guide mention the focus the role needs.
+
 ## 0.1.0 (2026-10-25)
 
 First public draft.

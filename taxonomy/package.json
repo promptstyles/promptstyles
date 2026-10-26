@@ -1,6 +1,6 @@
 {
   "name": "@promptstyles/taxonomy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Prompt Styles taxonomy and rubric: YAML data, JSON Schemas and a small loader.",
   "type": "module",
   "license": "CC-BY-4.0",
@@ -11,11 +11,17 @@
       "types": "./index.d.ts",
       "default": "./index.mjs"
     },
+    "./score": {
+      "types": "./score.d.ts",
+      "default": "./score.mjs"
+    },
     "./schemas/*": "./schemas/*"
   },
   "files": [
     "index.mjs",
     "index.d.ts",
+    "score.mjs",
+    "score.d.ts",
     "taxonomy.yaml",
     "rubric.yaml",
     "styles",

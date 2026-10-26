@@ -22,7 +22,7 @@ Each style lives in `taxonomy/styles/<id>.yaml` and is checked by `taxonomy/sche
 - `map` places the style on two axes from 0 to 100: `how` (describes the outcome → dictates the implementation) and `verification` (trusts the output → verifies against a contract). Positions are a judgment call: explain yours in the pull request.
 - New styles start with `status: draft`. Maintainers move a style to `stable` after review.
 
-The rubric lives in `taxonomy/rubric.yaml`. Every dimension needs one descriptor per level.
+The rubric lives in `taxonomy/rubric.yaml`. Every dimension needs one descriptor per level and a `side` (`business`, `tech` or `both`), and the focus positions must cover the 0–100 axis without gaps. The scoring math is in `taxonomy/score.mjs`.
 
 ## Rules for the manifesto
 

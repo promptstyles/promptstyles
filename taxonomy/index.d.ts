@@ -29,10 +29,51 @@ export interface Style {
   related: string[];
 }
 
+export interface Source {
+  title: string;
+  url: string;
+}
+
+export interface RubricLevel {
+  level: number;
+  name: Localized;
+  aka?: string[];
+  summary: Localized;
+  sources?: Source[];
+}
+
+/** A band on the focus axis: 0 = business, 100 = tech. */
+export interface FocusPosition {
+  id: string;
+  from: number;
+  to: number;
+  name: Localized;
+  aka?: string[];
+  summary: Localized;
+  sources?: Source[];
+}
+
+export interface RubricDimension {
+  id: string;
+  /** Which side of the focus axis it measures. "both" counts for the level only. */
+  side: 'business' | 'tech' | 'both';
+  name: Localized;
+  question: Localized;
+  descriptors: Localized[];
+}
+
 export interface Rubric {
   intro: Localized;
-  levels: { level: number; name: Localized; summary: Localized }[];
-  dimensions: { id: string; name: Localized; question: Localized; descriptors: Localized[] }[];
+  result_example: Localized;
+  levels: RubricLevel[];
+  focus: {
+    title: Localized;
+    description: Localized;
+    axis: { low: Localized; high: Localized };
+    positions: FocusPosition[];
+  };
+  scoring: Localized<string[]>;
+  dimensions: RubricDimension[];
   interview: {
     title: Localized;
     steps: { minutes: number; name: Localized; description: Localized }[];

@@ -1,0 +1,41 @@
+---
+// The business ↔ tech focus axis. Bands come from rubric.focus.positions (0 = business, 100 = tech).
+// With `marker`, a dot can be placed on the axis from a client script (see Calculator.astro).
+import { rubric } from '../lib/data';
+import { l, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  /** Show a movable marker, hidden until a script positions it. */
+  marker?: boolean;
+  /** Highlight one position by id. */
+  current?: string;
+}
+
+const { lang, marker = false, current } = Astro.props;
+const { axis, positions } = rubric.focus;
+---
+
+<figure class="focus" data-focus-axis>
+  <div class="focus-ends" aria-hidden="true">
+    <span>← {l(axis.low, lang)}</span>
+    <span>{l(axis.high, lang)} →</span>
+  </div>
+  <div class="focus-bar">
+    {positions.slice(1).map((p) => <span class="focus-tick" style={`left:${p.from}%`} />)}
+    {marker && <span class="focus-marker" data-focus-marker hidden />}
+  </div>
+  <ol class="focus-names">
+    {
+      positions.map((p) => (
+        <li
+          class:list={{ current: p.id === current }}
+          style={`grid-column: span ${p.to - p.from}`}
+          data-focus-id={p.id}
+        >
+          {l(p.name, lang)}
+        </li>
+      ))
+    }
+  </ol>
+</figure>

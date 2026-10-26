@@ -91,11 +91,30 @@ if (check('rubric', rubric, 'taxonomy/rubric.yaml')) {
   rubric.levels.forEach((l, i) => {
     if (l.level !== i + 1) fail('taxonomy/rubric.yaml', `levels must be numbered 1..n in order (found ${l.level} at position ${i + 1})`);
   });
+  const R = 'taxonomy/rubric.yaml';
+  const dimIds = new Set();
   for (const d of rubric.dimensions) {
+    if (dimIds.has(d.id)) fail(R, `dimension id "${d.id}" is used twice`);
+    dimIds.add(d.id);
     if (d.descriptors.length !== rubric.levels.length) {
-      fail('taxonomy/rubric.yaml', `dimension "${d.id}" has ${d.descriptors.length} descriptors, expected ${rubric.levels.length} (one per level)`);
+      fail(R, `dimension "${d.id}" has ${d.descriptors.length} descriptors, expected ${rubric.levels.length} (one per level)`);
     }
   }
+  // The focus axis compares the two sides, so each needs at least one dimension.
+  for (const side of ['business', 'tech']) {
+    if (!rubric.dimensions.some((d) => d.side === side)) fail(R, `no dimension has side "${side}"`);
+  }
+  // Focus bands must cover 0..100 in order, without gaps or overlaps.
+  let edge = 0;
+  const posIds = new Set();
+  for (const p of rubric.focus.positions) {
+    if (posIds.has(p.id)) fail(R, `focus position id "${p.id}" is used twice`);
+    posIds.add(p.id);
+    if (p.from !== edge) fail(R, `focus position "${p.id}" starts at ${p.from}, expected ${edge}`);
+    if (p.to <= p.from) fail(R, `focus position "${p.id}" must end after it starts`);
+    edge = p.to;
+  }
+  if (edge !== 100) fail(R, `focus positions end at ${edge}, expected 100`);
 }
 
 // --- Signatories ---
