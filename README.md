@@ -2,7 +2,7 @@
 
 **An open manifesto, taxonomy and rubric for building software with AI, and for evaluating the people who do it.**
 
-[Website](https://promptstyles.github.io/promptstyles/) · [Manifesto](manifesto/MANIFESTO.md) · [Manifesto em português](manifesto/MANIFESTO.pt-BR.md) · [Sign it](https://github.com/promptstyles/promptstyles/issues/new?template=sign.yml)
+[promptstyles.org](https://promptstyles.org) · [Manifesto](manifesto/MANIFESTO.md) · [Manifesto em português](manifesto/MANIFESTO.pt-BR.md) · [Sign it](https://promptstyles.org/sign)
 
 > 🇧🇷 Um manifesto, uma taxonomia e uma rubrica abertos para padronizar como engenheiros trabalham com IA e como empresas avaliam isso em entrevistas. O site é bilíngue (inglês e português) e qualquer pessoa com conta no GitHub pode assinar.
 
@@ -46,7 +46,7 @@ The site reads the YAML and Markdown at build time, so it is never out of sync w
 
 No backend, no OAuth app. The GitHub account that opens the issue is the proof of identity.
 
-1. The "Sign with GitHub" button (or the short link `/sign` on the site) opens a pre-filled issue form.
+1. The "Sign with GitHub" button (or [promptstyles.org/sign](https://promptstyles.org/sign)) opens a pre-filled issue form.
 2. The [Sign workflow](.github/workflows/sign.yml) parses the issue with [scripts/sign.mjs](scripts/sign.mjs), writes `manifesto/signatories/<login>.yaml`, commits it, replies and closes the issue.
 3. It then triggers the [Deploy workflow](.github/workflows/deploy.yml), which rebuilds the site with the new count and name.
 
@@ -61,8 +61,8 @@ Signatures are personal. Company names are shown for identification only.
 
 ## Use the taxonomy
 
-- Read it on [the site](https://promptstyles.github.io/promptstyles/styles/).
-- Fetch it as JSON: [`/taxonomy.json`](https://promptstyles.github.io/promptstyles/taxonomy.json) (styles and rubric) and [`/signatories.json`](https://promptstyles.github.io/promptstyles/signatories.json).
+- Read it on [promptstyles.org/styles](https://promptstyles.org/styles/).
+- Fetch it as JSON: [`/taxonomy.json`](https://promptstyles.org/taxonomy.json) (styles and rubric) and [`/signatories.json`](https://promptstyles.org/signatories.json).
 - Use the YAML files in [`taxonomy/`](taxonomy/) directly. They are validated by the schemas in [`taxonomy/schemas/`](taxonomy/schemas/).
 
 ## Develop
@@ -84,7 +84,7 @@ npm run og         # regenerate the share images (needs Google Chrome)
 2. In **Settings → Pages**, set **Source** to **GitHub Actions**.
 3. The [Labels workflow](.github/workflows/labels.yml) creates the `signature`, `needs-review`, `approved` and `taxonomy` labels on the first push. If it did not run, start it from the **Actions** tab. The signature form only works once the `signature` label exists.
 4. Every push to `main` deploys the site. Until a custom domain is set it lives at `https://<owner>.github.io/<repo>/`.
-5. Custom domain: register `promptstyles.org`, add it in **Settings → Pages → Custom domain**, point the DNS to GitHub Pages ([docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site)) and turn on **Enforce HTTPS**.
+5. Custom domain: `promptstyles.org` is registered at GoDaddy. The apex has GitHub Pages A and AAAA records, `www` is a CNAME to `promptstyles.github.io`, and the domain is verified in the organization settings. See the [GitHub docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
 
 The sign button links to the repository the site was built from (`GITHUB_REPOSITORY` in CI). For local development it falls back to the value in [`apps/web/astro.config.mjs`](apps/web/astro.config.mjs).
 
