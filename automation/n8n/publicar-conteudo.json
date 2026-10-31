@@ -1,0 +1,472 @@
+{
+  "name": "Prompt Styles · Publicar conteúdo aprovado",
+  "nodes": [
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000000",
+      "name": "Como usar",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-40, -360],
+      "parameters": {
+        "width": 520,
+        "height": 300,
+        "content": "## Proposta: publicar conteúdo aprovado\nLê a fila **Conteúdo** da Central (Projeto = Prompt Styles, Status = Aprovado, Data agendada <= agora), publica no LinkedIn e marca **Publicado** com o link, ou **Erro**. Cada post processado vira uma linha em **Log de execuções**.\n\nAntes de ativar:\n1. Nós do Notion: credencial **Notion Central** (Notion API), com acesso à página da Central.\n2. Nó do LinkedIn: crie a credencial LinkedIn e escolha o seu perfil em *Person*.\n3. Teste com um post de teste Aprovado e com data no passado.\n\nVeja automation/n8n/README.md no repo."
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000001",
+      "name": "A cada 15 minutos",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000002",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [220, 0],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0000001-0000-4000-8000-000000000001",
+              "name": "projetoPageId",
+              "value": "409e43a8-afc5-81a9-bce3-cfe280b5d6c6",
+              "type": "string"
+            },
+            {
+              "id": "c0000001-0000-4000-8000-000000000002",
+              "name": "conteudoDbId",
+              "value": "54f3a161-997d-4359-9790-eabe7039613c",
+              "type": "string"
+            },
+            {
+              "id": "c0000001-0000-4000-8000-000000000003",
+              "name": "logDbId",
+              "value": "631ba06e-a23d-4239-81b1-6c8541ea112a",
+              "type": "string"
+            },
+            {
+              "id": "c0000001-0000-4000-8000-000000000004",
+              "name": "workflowName",
+              "value": "Prompt Styles · Publicar conteúdo aprovado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000003",
+      "name": "Buscar aprovados",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "notionApi": {
+          "name": "Notion Central"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.notion.com/v1/databases/{{ $json.conteudoDbId }}/query",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ filter: { and: [ { property: 'Projeto', relation: { contains: $json.projetoPageId } }, { property: 'Status', status: { equals: 'Aprovado' } }, { property: 'Data agendada', date: { on_or_before: $now.toISO() } } ] }, sorts: [ { property: 'Data agendada', direction: 'ascending' } ], page_size: 20 }) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000004",
+      "name": "Preparar posts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, -100],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// One item per approved post. Posts that cannot go out get an `erro` and take the error path.\nconst SUPORTADAS = ['LinkedIn'];\nconst LIMITE_LINKEDIN = 3000;\nconst publicados = $getWorkflowStaticData('global').publicados || {};\nconst texto = (prop) => ((prop && (prop.rich_text || prop.title)) || []).map((t) => t.plain_text).join('');\n\nreturn ($input.first().json.results || []).map((page) => {\n  const p = page.properties;\n  const item = {\n    pageId: page.id,\n    titulo: texto(p['Título']) || 'Sem título',\n    plataforma: (p['Plataforma'] && p['Plataforma'].select && p['Plataforma'].select.name) || '',\n    formato: (p['Formato'] && p['Formato'].select && p['Formato'].select.name) || '',\n    texto: texto(p['Texto']).trim(),\n    midia: (p['Mídia'] && p['Mídia'].url) || '',\n    erro: '',\n  };\n\n  if (publicados[page.id]) {\n    // Published in an earlier run, but the Notion update failed. Never post twice.\n    item.erro = `Já foi publicado (${publicados[page.id]}), mas o Notion não foi atualizado. Confira o post e ajuste o Status.`;\n  } else if (!SUPORTADAS.includes(item.plataforma)) {\n    item.erro = `Este workflow ainda não publica em \"${item.plataforma || 'sem plataforma'}\".`;\n  } else if (!item.texto) {\n    item.erro = 'Texto vazio.';\n  } else if (item.texto.length > LIMITE_LINKEDIN) {\n    item.erro = `Texto com ${item.texto.length} caracteres. O LinkedIn aceita até ${LIMITE_LINKEDIN}.`;\n  }\n\n  return { json: item };\n});\n"
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000005",
+      "name": "Pode publicar?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [880, -100],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c0000002-0000-4000-8000-000000000001",
+              "leftValue": "={{ $json.erro }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000006",
+      "name": "Publicar no LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [1100, -200],
+      "onError": "continueErrorOutput",
+      "notes": "Sem retry de propósito: repetir um post que talvez tenha saído pode publicar duas vezes. Escolha o seu perfil em Person depois de importar.",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "name": "LinkedIn"
+        }
+      },
+      "parameters": {
+        "resource": "post",
+        "operation": "create",
+        "postAs": "person",
+        "person": "",
+        "text": "={{ $json.texto }}",
+        "shareMediaCategory": "NONE",
+        "additionalFields": {
+          "visibility": "PUBLIC"
+        }
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000007",
+      "name": "Guardar link",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, -300],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Builds the post URL and remembers the post, so a failed Notion update never leads to a second post.\nconst post = $('Preparar posts').item.json;\nconst urn = $json.urn || '';\nconst link = urn ? `https://www.linkedin.com/feed/update/${urn}/` : '';\nconst estado = $getWorkflowStaticData('global');\nestado.publicados = Object.assign({}, estado.publicados || {}, { [post.pageId]: link || 'link desconhecido' });\n\nreturn { json: Object.assign({}, post, { link }) };\n"
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000008",
+      "name": "Marcar Publicado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, -300],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "notionApi": {
+          "name": "Notion Central"
+        }
+      },
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://api.notion.com/v1/pages/{{ $json.pageId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ properties: { 'Status': { status: { name: 'Publicado' } }, 'Link publicado': { url: $json.link || null } } }) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000009",
+      "name": "Log: sucesso",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1760, -400],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0000003-0000-4000-8000-000000000001",
+              "name": "titulo",
+              "value": "={{ $('Guardar link').item.json.titulo }}",
+              "type": "string"
+            },
+            {
+              "id": "c0000003-0000-4000-8000-000000000002",
+              "name": "plataforma",
+              "value": "={{ $('Guardar link').item.json.plataforma }}",
+              "type": "string"
+            },
+            {
+              "id": "c0000003-0000-4000-8000-000000000003",
+              "name": "resultado",
+              "value": "Sucesso",
+              "type": "string"
+            },
+            {
+              "id": "c0000003-0000-4000-8000-000000000004",
+              "name": "mensagem",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000010",
+      "name": "Montar erro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1540, 100],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Collects what went wrong for one post. Items arrive from three places:\n// \"Pode publicar?\" (with `erro`), the LinkedIn error output and the \"Marcar Publicado\" error output.\nconst post = $('Preparar posts').item.json;\nconst publicado = ($getWorkflowStaticData('global').publicados || {})[post.pageId];\nconst erro = $json.error;\nconst detalhe = $json.erro\n  || (typeof erro === 'string' ? erro : erro && (erro.message || JSON.stringify(erro)))\n  || $json.message\n  || 'Erro desconhecido';\nconst mensagem = publicado && !$json.erro\n  ? `Publicado no LinkedIn (${publicado}), mas o Notion não foi atualizado: ${detalhe}`\n  : detalhe;\n\nreturn { json: { pageId: post.pageId, titulo: post.titulo, plataforma: post.plataforma, mensagem } };\n"
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000011",
+      "name": "Marcar Erro",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1760, 100],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "notionApi": {
+          "name": "Notion Central"
+        }
+      },
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://api.notion.com/v1/pages/{{ $json.pageId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ properties: { 'Status': { status: { name: 'Erro' } } } }) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000012",
+      "name": "Log: erro",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1980, 100],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0000004-0000-4000-8000-000000000001",
+              "name": "titulo",
+              "value": "={{ $('Montar erro').item.json.titulo }}",
+              "type": "string"
+            },
+            {
+              "id": "c0000004-0000-4000-8000-000000000002",
+              "name": "plataforma",
+              "value": "={{ $('Montar erro').item.json.plataforma }}",
+              "type": "string"
+            },
+            {
+              "id": "c0000004-0000-4000-8000-000000000003",
+              "name": "resultado",
+              "value": "Erro",
+              "type": "string"
+            },
+            {
+              "id": "c0000004-0000-4000-8000-000000000004",
+              "name": "mensagem",
+              "value": "={{ $('Montar erro').item.json.mensagem }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000013",
+      "name": "Log: falha geral",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [660, 200],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0000005-0000-4000-8000-000000000001",
+              "name": "titulo",
+              "value": "Busca de conteúdos aprovados",
+              "type": "string"
+            },
+            {
+              "id": "c0000005-0000-4000-8000-000000000002",
+              "name": "plataforma",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "c0000005-0000-4000-8000-000000000003",
+              "name": "resultado",
+              "value": "Erro",
+              "type": "string"
+            },
+            {
+              "id": "c0000005-0000-4000-8000-000000000004",
+              "name": "mensagem",
+              "value": "={{ typeof $json.error === 'string' ? $json.error : ($json.error ? ($json.error.message || JSON.stringify($json.error)) : 'Erro desconhecido ao consultar o Notion') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6a1f0c2e-1b7d-4c55-9a01-000000000014",
+      "name": "Gravar log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2200, 0],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "notionApi": {
+          "name": "Notion Central"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.notion.com/v1/pages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ parent: { database_id: $('Config').first().json.logDbId }, properties: { 'Execução': { title: [ { text: { content: ($json.resultado === 'Sucesso' ? 'Publicado: ' : 'Erro: ') + $json.titulo } } ] }, 'Workflow': { rich_text: [ { text: { content: $('Config').first().json.workflowName } } ] }, 'Projeto': { relation: [ { id: $('Config').first().json.projetoPageId } ] }, 'Plataforma': { select: $json.plataforma ? { name: $json.plataforma } : null }, 'Data': { date: { start: $now.toISO() } }, 'Resultado': { select: { name: $json.resultado } }, 'Mensagem de erro': { rich_text: $json.mensagem ? [ { text: { content: String($json.mensagem).slice(0, 1900) } } ] : [] } } }) }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "A cada 15 minutos": {
+      "main": [[{ "node": "Config", "type": "main", "index": 0 }]]
+    },
+    "Config": {
+      "main": [[{ "node": "Buscar aprovados", "type": "main", "index": 0 }]]
+    },
+    "Buscar aprovados": {
+      "main": [
+        [{ "node": "Preparar posts", "type": "main", "index": 0 }],
+        [{ "node": "Log: falha geral", "type": "main", "index": 0 }]
+      ]
+    },
+    "Preparar posts": {
+      "main": [[{ "node": "Pode publicar?", "type": "main", "index": 0 }]]
+    },
+    "Pode publicar?": {
+      "main": [
+        [{ "node": "Publicar no LinkedIn", "type": "main", "index": 0 }],
+        [{ "node": "Montar erro", "type": "main", "index": 0 }]
+      ]
+    },
+    "Publicar no LinkedIn": {
+      "main": [
+        [{ "node": "Guardar link", "type": "main", "index": 0 }],
+        [{ "node": "Montar erro", "type": "main", "index": 0 }]
+      ]
+    },
+    "Guardar link": {
+      "main": [[{ "node": "Marcar Publicado", "type": "main", "index": 0 }]]
+    },
+    "Marcar Publicado": {
+      "main": [
+        [{ "node": "Log: sucesso", "type": "main", "index": 0 }],
+        [{ "node": "Montar erro", "type": "main", "index": 0 }]
+      ]
+    },
+    "Log: sucesso": {
+      "main": [[{ "node": "Gravar log", "type": "main", "index": 0 }]]
+    },
+    "Montar erro": {
+      "main": [[{ "node": "Marcar Erro", "type": "main", "index": 0 }]]
+    },
+    "Marcar Erro": {
+      "main": [[{ "node": "Log: erro", "type": "main", "index": 0 }]]
+    },
+    "Log: erro": {
+      "main": [[{ "node": "Gravar log", "type": "main", "index": 0 }]]
+    },
+    "Log: falha geral": {
+      "main": [[{ "node": "Gravar log", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {}
+}
